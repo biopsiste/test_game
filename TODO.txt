@@ -5,10 +5,19 @@
 - text labels
 - keyboard events
 - subwindow
--
+-	gamepad support (much later in development)
+- 
 
 [DESIGN]
 - units motion
 - projectile motion
 - levels architecture
+- Tile structure, needs traversability info, texture info, etc...
+- possibly a BattleTerrain object, needs tile matrix, etc...
+- map panning, maybe top-down perspective, and possibly (no idea how to do this) rotating the map 90 deg by 90 deg
 -
+
+[SYSTEMS]
+- battle system!
+- save/load system
+- 
