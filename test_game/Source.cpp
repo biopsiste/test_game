@@ -81,14 +81,14 @@ int main(int argc, char* args[]) {
         } 
 
         auto mo = smartPoint(mouseX, mouseY - tileHeight / 2);
-        int I = (mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.);
-        int J = -(mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.);
+        int I = (mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.) - 1 + 0.5;
+        int J = -(mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.) + 0.5;
         cout << "x " << mo.cartX << " y " << mo.cartY <<
            " tile  " << I << " " << J << endl;
 //          " u " << mo.isoX << " v " << mo.isoY <<
 //          " iso BIN  " << abs(mo.isoX) / isoW << "   " << abs(mo.isoY) / isoH << endl;
-        int XX = (I - J) * tileWidth / 2 + OFFSET_X;
-        int YY = (I + J) * tileHeight / 4 + OFFSET_Y;
+        int XX = (I - J) * tileWidth / 2 + OFFSET_X + 0.5;
+        int YY = (I + J) * tileHeight / 4 + OFFSET_Y + 0.5;
         gSpriteSheetTexture.render(Point{ XX , YY }, &gSpriteClips[27]);
 
         //Update screen
