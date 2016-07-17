@@ -11,9 +11,6 @@
 
 using namespace std;
 
-#define OFFSET_X      400.
-#define OFFSET_Y      150.
-
 int main(int argc, char* args[]) {
   //Start up SDL and create window
   if (!init()) {
@@ -67,11 +64,9 @@ int main(int argc, char* args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(gRenderer);
 
-        for (int i = 0; i < 5; i++) {
-          for (int j = 0; j < 5; j++) {
-            int X = (i - j) * tileWidth / 2 + OFFSET_X;
-            int Y = (i + j) * tileHeight / 4 + OFFSET_Y;
-            gSpriteSheetTexture.render(Point{ X , Y }, &cursor);
+        for (int i = 0; i < MAP_W; i++) {
+          for (int j = 0; j < MAP_H; j++) {
+            renderTile(i, j, &gSpriteClips[25]);
           }
         }
 
@@ -80,16 +75,9 @@ int main(int argc, char* args[]) {
           gButtons[ i ].render(); 
         } 
 
-        auto mo = smartPoint(mouseX, mouseY - tileHeight / 2);
-        int I = (mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.) - 1 + 0.5;
-        int J = -(mo.cartX - OFFSET_X) / tileWidth + (mo.cartY - OFFSET_Y) / (tileHeight / 2.) + 0.5;
-        cout << "x " << mo.cartX << " y " << mo.cartY <<
-           " tile  " << I << " " << J << endl;
-//          " u " << mo.isoX << " v " << mo.isoY <<
-//          " iso BIN  " << abs(mo.isoX) / isoW << "   " << abs(mo.isoY) / isoH << endl;
-        int XX = (I - J) * tileWidth / 2 + OFFSET_X + 0.5;
-        int YY = (I + J) * tileHeight / 4 + OFFSET_Y + 0.5;
-        gSpriteSheetTexture.render(Point{ XX , YY }, &gSpriteClips[27]);
+        auto mouse = Point{mouseX, mouseY};
+        auto tile = mouse2tile(mouse);
+        renderCursor(tile, &cursor);
 
         //Update screen
         SDL_RenderPresent(gRenderer);

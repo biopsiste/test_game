@@ -1,8 +1,8 @@
 #pragma once
 //Button constants 
-const int BUTTON_WIDTH = 64; 
-const int BUTTON_HEIGHT = 64; 
-const int TOTAL_BUTTONS = 4; 
+#define BUTTON_WIDTH       64 
+#define BUTTON_HEIGHT      64 
+#define TOTAL_BUTTONS      4 
 
 enum LButtonSprite {  
   BUTTON_SPRITE_MOUSE_OUT = 0, 

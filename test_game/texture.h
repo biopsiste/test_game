@@ -203,16 +203,16 @@ bool loadMedia() {
 
     for (int i = 0; i < 160; ++i) {
       int r = i / 10, c = i % 10;
-      gSpriteClips[i].x = tileWidth * c;
-      gSpriteClips[i].y = tileHeight * r;
-      gSpriteClips[i].w = tileWidth;
-      gSpriteClips[i].h = tileHeight;
+      gSpriteClips[i].x = int( TILE_W * c );
+      gSpriteClips[i].y = int( TILE_H * r );
+      gSpriteClips[i].w = int( TILE_W );
+      gSpriteClips[i].h = int( TILE_H );
     }
 
-    cursor.x = tileWidth * (159 % 10);
-    cursor.y = tileHeight * (159 / 10);
-    cursor.w = tileWidth;
-    cursor.h = tileHeight;
+    cursor.x = int( TILE_W * (159 % 10) );
+    cursor.y = int( TILE_H * (159 / 10) );
+    cursor.w = int( TILE_W );
+    cursor.h = int( TILE_H );
   }
 
   return success;
@@ -233,8 +233,17 @@ void close() {
   SDL_Quit();
 }
 
-///////////// ALLE
+///////////// usefull render function
 
-void renderTile(Point &p, SDL_Rect * tile) {
-  gSpriteSheetTexture.render(p, tile);
+void renderTile(int i, int j, SDL_Rect * tile) {
+  gSpriteSheetTexture.render(tile2screen(i, j), tile);
+}
+
+void renderTile(Point tile_index, SDL_Rect * tile) {
+  renderTile(tile_index.x, tile_index.y, tile);
+}
+
+void renderCursor(Point tile_index, SDL_Rect * tile) {
+  if( tile_index.x >= 0 && tile_index.x < MAP_W && tile_index.y >= 0 && tile_index.y < MAP_H )
+    renderTile(tile_index, tile);
 }

@@ -1,0 +1,14 @@
+[BUGFIX]
+- 
+
+[EXPLORE]
+- text labels
+- keyboard events
+- subwindow
+-
+
+[DESIGN]
+- units motion
+- projectile motion
+- levels architecture
+-
