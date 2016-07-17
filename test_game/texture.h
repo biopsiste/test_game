@@ -48,7 +48,7 @@ SDL_Window* gWindow = NULL;
 SDL_Renderer* gRenderer = NULL;
 
 //Scene sprites
-SDL_Rect gSpriteClips[160], cursor;
+SDL_Rect gSpriteClips[160], cursorSprite, unitSprite;
 LTexture gSpriteSheetTexture;
 
 LTexture::LTexture() {
@@ -209,10 +209,8 @@ bool loadMedia() {
       gSpriteClips[i].h = int( TILE_H );
     }
 
-    cursor.x = int( TILE_W * (159 % 10) );
-    cursor.y = int( TILE_H * (159 / 10) );
-    cursor.w = int( TILE_W );
-    cursor.h = int( TILE_H );
+    cursorSprite = gSpriteClips[159];
+    unitSprite = gSpriteClips[119];
   }
 
   return success;

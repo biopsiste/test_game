@@ -42,19 +42,19 @@ int main(int argc, char* args[]) {
       // MAIN LOOP
       while (!quit) {
 
-        //Handle events on queue
+        // Handle events on queue
         while (SDL_PollEvent(&e) != 0) {
-          //User requests quit
+          // User requests quit
           if (e.type == SDL_QUIT) {
             quit = true;
           }
 
-          //Get mouse position
+          // Get mouse position
           if (e.type == SDL_MOUSEMOTION) {
             SDL_GetMouseState(&mouseX, &mouseY);
           }
 
-          //Handle button events 
+          // Handle button events 
           for( int i = 0; i < TOTAL_BUTTONS; ++i ) { 
             gButtons[ i ].handleEvent( &e ); 
           } 
@@ -64,6 +64,7 @@ int main(int argc, char* args[]) {
         SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
         SDL_RenderClear(gRenderer);
 
+        // Render ground 
         for (int i = 0; i < MAP_W; i++) {
           for (int j = 0; j < MAP_H; j++) {
             renderTile(i, j, &gSpriteClips[25]);
@@ -75,9 +76,11 @@ int main(int argc, char* args[]) {
           gButtons[ i ].render(); 
         } 
 
-        auto mouse = Point{mouseX, mouseY};
-        auto tile = mouse2tile(mouse);
-        renderCursor(tile, &cursor);
+        // Render cursor
+        renderCursor(mouse2tile(Point{ mouseX, mouseY }), &cursorSprite);
+
+        // Render unit
+        renderTile(1,1, &unitSprite);
 
         //Update screen
         SDL_RenderPresent(gRenderer);
