@@ -5,8 +5,9 @@
 - text labels
 - keyboard events
 - subwindow
--	gamepad support (much later in development)
-- 
+- gamepad support (much later in development)
+- animation and framerate
+-
 
 [DESIGN]
 - units motion
@@ -19,5 +20,13 @@
 
 [SYSTEMS]
 - battle system!
-- save/load system
+- save/load system!
+- character system!
+- inventory system!
+- levelling system!
+-
+
+[UTILS]
+- organize the tilesets into an easy-to-access suitable container(s)
+- pick a format (possibily standard) to export/import the tile structure of a level
 - 

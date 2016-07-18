@@ -79,8 +79,7 @@ std::vector<Point> findPath(int* map, Point& origin, Point& destination) {
 	std::vector<TileCandidate> main_list;
 	main_list.emplace_back(destination.x, destination.y, 0);
 
-	int xx, yy, cc;
-	int i = 0;
+	int cc, i = 0;
 
 	bool done = false;
 	while(!done) {
@@ -114,7 +113,7 @@ std::vector<Point> findPath(int* map, Point& origin, Point& destination) {
 	int last_c = main_list.back().counter;
 	path.push_back(Point{ main_list.back().x, main_list.back().y });
 
-	for(int j = main_list.size() - 2; j >= 1; --j) {
+	for(size_t j = main_list.size() - 2; j >= 1; --j) {
 		if(main_list[j].counter < last_c && are_4neighbors(path.back(), Point{ main_list[j].x, main_list[j].y })) {
 			last_c = main_list[j].counter;
 			path.push_back(Point{ main_list[j].x, main_list[j].y });

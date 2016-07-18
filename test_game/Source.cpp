@@ -11,7 +11,7 @@
 
 using namespace std;
 
-Uint32 my_callbackfunc(Uint32 interval, void *param) {
+unsigned int move_timer_cb(unsigned int interval, void *param) {
 	SDL_Event event;
 	SDL_UserEvent userevent;
 
@@ -57,17 +57,17 @@ int main(int argc, char* args[]) {
         gButtons[i].setPosition(50 + i*BUTTON_WIDTH, 50 );
       }
 
-      //While application is running
+      // General variables
       int mouseX = 0, mouseY = 0;
-      int cartX = 0, cartY = 0;
-      int isoX = 0, isoY = 0;
+//      int cartX = 0, cartY = 0;
+//      int isoX = 0, isoY = 0;
 
 			Point mouse_tile, last_mouse_tile{ -100, -100 };
 			Point sprite_tile{ 1, 1 };
+
+			SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, move_timer_cb, &sprite_tile); //call callback every 1 sec
+      
       // MAIN LOOP
-
-			SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, my_callbackfunc, &sprite_tile); //call callback every 1 sec
-
       while (!quit) {
 
         // Handle events on queue

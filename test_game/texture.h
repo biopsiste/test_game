@@ -242,6 +242,5 @@ void renderTile(Point tile_index, SDL_Rect * tile) {
 }
 
 void renderCursor(Point tile_index, SDL_Rect * tile) {
-  if( tile_index.x >= 0 && tile_index.x < MAP_W && tile_index.y >= 0 && tile_index.y < MAP_H )
-    renderTile(tile_index, tile);
+  if( is_in_map(tile_index) ) renderTile(tile_index, tile);
 }
