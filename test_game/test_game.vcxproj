@@ -156,6 +156,7 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="animation.h" />
     <ClInclude Include="buttons.h" />
     <ClInclude Include="geometry.h" />
     <ClInclude Include="texture.h" />
@@ -179,6 +180,9 @@
     <Import Project="packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets" Condition="Exists('packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" />
     <Import Project="packages\sdl2_image.v140.redist.2.0.1\build\native\sdl2_image.v140.redist.targets" Condition="Exists('packages\sdl2_image.v140.redist.2.0.1\build\native\sdl2_image.v140.redist.targets')" />
     <Import Project="packages\sdl2_image.v140.2.0.1\build\native\sdl2_image.v140.targets" Condition="Exists('packages\sdl2_image.v140.2.0.1\build\native\sdl2_image.v140.targets')" />
+    <Import Project="packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets" Condition="Exists('packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" />
+    <Import Project="packages\sdl2_ttf.v140.redist.2.0.14\build\native\sdl2_ttf.v140.redist.targets" Condition="Exists('packages\sdl2_ttf.v140.redist.2.0.14\build\native\sdl2_ttf.v140.redist.targets')" />
+    <Import Project="packages\sdl2_ttf.v140.2.0.14\build\native\sdl2_ttf.v140.targets" Condition="Exists('packages\sdl2_ttf.v140.2.0.14\build\native\sdl2_ttf.v140.targets')" />
   </ImportGroup>
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
     <PropertyGroup>
@@ -195,5 +199,8 @@
     <Error Condition="!Exists('packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.1.2.8.8\build\native\zlib.v140.windesktop.msvcstl.dyn.rt-dyn.targets'))" />
     <Error Condition="!Exists('packages\sdl2_image.v140.redist.2.0.1\build\native\sdl2_image.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_image.v140.redist.2.0.1\build\native\sdl2_image.v140.redist.targets'))" />
     <Error Condition="!Exists('packages\sdl2_image.v140.2.0.1\build\native\sdl2_image.v140.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_image.v140.2.0.1\build\native\sdl2_image.v140.targets'))" />
+    <Error Condition="!Exists('packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\freetype.redist.2.6.2.1\build\native\freetype.redist.targets'))" />
+    <Error Condition="!Exists('packages\sdl2_ttf.v140.redist.2.0.14\build\native\sdl2_ttf.v140.redist.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_ttf.v140.redist.2.0.14\build\native\sdl2_ttf.v140.redist.targets'))" />
+    <Error Condition="!Exists('packages\sdl2_ttf.v140.2.0.14\build\native\sdl2_ttf.v140.targets')" Text="$([System.String]::Format('$(ErrorText)', 'packages\sdl2_ttf.v140.2.0.14\build\native\sdl2_ttf.v140.targets'))" />
   </Target>
 </Project>
