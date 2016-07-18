@@ -114,7 +114,7 @@ std::vector<Point> findPath(int* map, Point& origin, Point& destination) {
 	int last_c = main_list.back().counter;
 	path.push_back(Point{ main_list.back().x, main_list.back().y });
 
-	for(int j = main_list.size() - 1; j >= 1; --j) {
+	for(int j = main_list.size() - 2; j >= 1; --j) {
 		if(main_list[j].counter < last_c && are_4neighbors(path.back(), Point{ main_list[j].x, main_list[j].y })) {
 			last_c = main_list[j].counter;
 			path.push_back(Point{ main_list[j].x, main_list[j].y });
