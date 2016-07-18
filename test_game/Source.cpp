@@ -61,6 +61,7 @@ int main(int argc, char* args[]) {
       int mouseX = 0, mouseY = 0;
 //      int cartX = 0, cartY = 0;
 //      int isoX = 0, isoY = 0;
+      bool show_text;
 
 			Point mouse_tile, last_mouse_tile{ -100, -100 };
 			Point sprite_tile{ 1, 1 };
@@ -77,13 +78,24 @@ int main(int argc, char* args[]) {
             quit = true;
           }
 
+          // Keyboard event sample
+          // check sdl_scancodes at
+          // https://wiki.libsdl.org/SDL_Scancode
+          const unsigned char* currentKeyStates = SDL_GetKeyboardState( NULL ); 
+          if (currentKeyStates[SDL_SCANCODE_X]) {    // hit X to exit
+            quit = true; 
+          }
+          else if (currentKeyStates[SDL_SCANCODE_D]) {    // hit D to display text
+            show_text = (show_text == true) ? false : true;
+          }
+
           // Get mouse position
           if (e.type == SDL_MOUSEMOTION) {
             SDL_GetMouseState(&mouseX, &mouseY);
           }
 
 					// move sprite, commented
-					if(e.type == SDL_USEREVENT) {
+					if(e.type == SDL_USEREVENT) {    // timer callback points here
 						//insert new coords here, example:
 						//sprite_tile.x++;
 						//sprite_tile.y++;
