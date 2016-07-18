@@ -11,7 +11,30 @@
 
 using namespace std;
 
+Uint32 my_callbackfunc(Uint32 interval, void *param) {
+	SDL_Event event;
+	SDL_UserEvent userevent;
+
+	/* In this example, our callback pushes an SDL_USEREVENT event
+	into the queue, and causes our callback to be called again at the
+	same interval: */
+
+	userevent.type = SDL_USEREVENT;
+	userevent.code = 0;
+	userevent.data1 = NULL;
+	userevent.data2 = NULL;
+
+	event.type = SDL_USEREVENT;
+	event.user = userevent;
+
+	SDL_PushEvent(&event);
+	return(interval);
+}
+
+
 int main(int argc, char* args[]) {
+	//int* p;	auto path = findPath(p, Point{ 0,0 }, Point{ 0,5 }); //to test pathing
+
   //Start up SDL and create window
   if (!init()) {
     printf("Failed to initialize!\n");
@@ -39,7 +62,12 @@ int main(int argc, char* args[]) {
       int cartX = 0, cartY = 0;
       int isoX = 0, isoY = 0;
 
+			Point mouse_tile, last_mouse_tile{ -100, -100 };
+			Point sprite_tile{ 1, 1 };
       // MAIN LOOP
+
+			SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, my_callbackfunc, &sprite_tile); //call callback every 1 sec
+
       while (!quit) {
 
         // Handle events on queue
@@ -54,10 +82,17 @@ int main(int argc, char* args[]) {
             SDL_GetMouseState(&mouseX, &mouseY);
           }
 
+					// move sprite, commented
+					if(e.type == SDL_USEREVENT) {
+						//insert new coords here, example:
+						//sprite_tile.x++;
+						//sprite_tile.y++;
+					}
+
           // Handle button events 
           for( int i = 0; i < TOTAL_BUTTONS; ++i ) { 
             gButtons[ i ].handleEvent( &e ); 
-          } 
+          }
         }
 
         //Clear screen
@@ -77,10 +112,15 @@ int main(int argc, char* args[]) {
         } 
 
         // Render cursor
-        renderCursor(mouse2tile(Point{ mouseX, mouseY }), &cursorSprite);
+				mouse_tile = mouse2tile(Point{ mouseX, mouseY });
+				if(mouse_tile != last_mouse_tile) {
+					cout <<"mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
+					last_mouse_tile = mouse_tile;
+				}
+        renderCursor(mouse_tile, &cursorSprite);
 
         // Render unit
-        renderTile(1,1, &unitSprite);
+        renderTile(sprite_tile, &unitSprite);
 
         //Update screen
         SDL_RenderPresent(gRenderer);

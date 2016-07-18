@@ -231,7 +231,7 @@ void close() {
   SDL_Quit();
 }
 
-///////////// usefull render function
+///////////// useful render function
 
 void renderTile(int i, int j, SDL_Rect * tile) {
   gSpriteSheetTexture.render(tile2screen(i, j), tile);
