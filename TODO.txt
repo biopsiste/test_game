@@ -13,9 +13,10 @@
 - units motion
 - projectile motion
 - levels architecture
-- Tile structure, needs traversability info, height info!, texture info, etc...
+- Tile structure, needs traversability info (this includes traversal cost, it's not a boolean), height info!, texture info, etc...
 - possibly a BattleTerrain object, needs tile matrix, etc...
 - map panning, maybe top-down perspective, and possibly (no idea how to do this) rotating the map 90 deg by 90 deg
+- pathing needs to be connected to a Terrain object, needs to know obstacles and tile traversal costs
 -
 
 [SYSTEMS]
