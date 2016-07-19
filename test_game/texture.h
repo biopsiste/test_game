@@ -5,7 +5,6 @@ class LTexture {
 public:
   //Initializes variables
   LTexture();
-
   //Deallocates memory
   ~LTexture();
 
@@ -40,7 +39,7 @@ private:
 bool init();
 
 //Loads media
-bool loadMedia();
+bool loadMedia(std::string path);
 
 //Frees media and shuts down SDL
 void close();
@@ -245,12 +244,12 @@ bool init() {
   return success;
 }
 
-bool loadMedia() {
+bool loadMedia(std::string path) {
   //Loading success flag
   bool success = true;
 
   //Load sprite sheet texture
-  if (!gSpriteSheetTexture.loadFromFile("../resources/iso-64x64-outside_numeri2.png")) {
+  if (!gSpriteSheetTexture.loadFromFile(path)) {
     printf("Failed to load sprite sheet texture!\n");
     success = false;
   }

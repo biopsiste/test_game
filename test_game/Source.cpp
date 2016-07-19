@@ -11,7 +11,8 @@
 #include "buttons.h"
 #include "animation.h"
 
-#define MESSAGE         "no text wrapping built-in (hit X to quit or D to hide/show)"
+#define TILESET_1_PATH      "../resources/iso-64x64-outside_numeri2.png"
+#define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
 using namespace std;
 
@@ -22,7 +23,7 @@ int main(int argc, char* args[]) {
   }
   else {
     //Load media
-    if (!loadMedia()) {
+    if (!loadMedia(TILESET_1_PATH)) {
       printf("Failed to load media!\n");
       exit(-1);
     }
