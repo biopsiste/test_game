@@ -14,7 +14,7 @@ public:
   // Loads text from .ttf file
   bool loadTextMedia(std::string path, std::string text, SDL_Color textColor);
   //Creates image from font string 
-  bool loadFromRenderedText( std::string textureText, SDL_Color textColor );
+  bool setText( std::string textureText, SDL_Color textColor );
 
   //Deallocates texture
   void free();
@@ -107,7 +107,7 @@ bool LTexture::loadFromFile(std::string path) {
   return mTexture != NULL;
 }
 
-bool LTexture::loadFromRenderedText(std::string textureText, SDL_Color textColor) { 
+bool LTexture::setText(std::string textureText, SDL_Color textColor) { 
   //Get rid of preexisting texture 
   free(); 
   
@@ -144,8 +144,8 @@ bool LTexture::loadTextMedia(std::string path, std::string text, SDL_Color textC
     success = false; 
   } 
   else { 
-    //Render text 
-    if( !gTextTexture.loadFromRenderedText( text, textColor ) ) { 
+    //Render initial text 
+    if( !gTextTexture.setText( text, textColor ) ) { 
       printf( "Failed to render text texture!\n" ); 
       success = false; 
     } 

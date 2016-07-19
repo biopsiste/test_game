@@ -11,6 +11,8 @@
 #include "buttons.h"
 #include "animation.h"
 
+#define MESSAGE         "no text wrapping built-in (hit X to quit or D to hide/show)"
+
 using namespace std;
 
 int main(int argc, char* args[]) {
@@ -33,9 +35,8 @@ int main(int argc, char* args[]) {
 
     SDL_Color textWhite = { 255,255,255 };
     SDL_Color textRed = { 255,0,0 };
-    if ( !gTextTexture.loadTextMedia("../resources/sample.ttf", 
-      "no text wrapping built-in (hit X to quit or D to hide/show)"
-      , textRed) ) {
+    SDL_Color currentColor = textWhite;
+    if ( !gTextTexture.loadTextMedia("../resources/sample.ttf", MESSAGE, currentColor) ) {
       printf("Failed to load text media!\n");
       exit(-3);
     }
@@ -80,6 +81,18 @@ int main(int argc, char* args[]) {
           switch (e.key.keysym.sym) {
           case SDLK_d:                     // hit D to hide/display text
             show_text = (show_text == true) ? false : true;
+            break;
+          case SDLK_c:                     // change text color holding C
+            currentColor = textRed;
+            break;
+          default:
+            break;
+          }
+        }
+        if (e.type == SDL_KEYUP) {
+          switch (e.key.keysym.sym) {
+          case SDLK_c:                     // change text color holding C
+            currentColor = textWhite;
             break;
           default:
             break;
@@ -132,7 +145,10 @@ int main(int argc, char* args[]) {
       renderTile(sprite_tile, &unitSprite);
 
       // Render text
-      if (show_text) gTextTexture.render(SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4);
+      if (show_text) {
+        gTextTexture.setText(MESSAGE, currentColor);
+        gTextTexture.render(SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4);
+      }
 
       //Update screen
       SDL_RenderPresent(gRenderer);
