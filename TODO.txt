@@ -29,4 +29,5 @@
 [UTILS]
 - organize the tilesets into an easy-to-access suitable container(s)
 - pick a format (possibily standard) to export/import the tile structure of a level
-- 
+- create a smart MultilineTextBox object
+-

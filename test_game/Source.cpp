@@ -36,8 +36,13 @@ int main(int argc, char* args[]) {
 
     SDL_Color textWhite = { 255,255,255 };
     SDL_Color textRed = { 255,0,0 };
+    SDL_Color textGreen = { 0,255,0 };
     SDL_Color currentColor = textWhite;
     if ( !gTextTexture.loadTextMedia("../resources/sample.ttf", MESSAGE, currentColor) ) {
+      printf("Failed to load text media!\n");
+      exit(-3);
+    }
+    if (!gTextTexture2.loadTextMedia("../resources/sample.ttf", "multiline text", textGreen)) {
       printf("Failed to load text media!\n");
       exit(-3);
     }
@@ -150,6 +155,8 @@ int main(int argc, char* args[]) {
         gTextTexture.setText(MESSAGE, currentColor);
         gTextTexture.render(SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4);
       }
+      gTextTexture2.setText("multiline text", textGreen);
+      gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
 
       //Update screen
       SDL_RenderPresent(gRenderer);

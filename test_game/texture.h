@@ -1,5 +1,4 @@
 #pragma once
-
 //Texture wrapper class
 class LTexture {
 public:
@@ -52,7 +51,7 @@ SDL_Renderer* gRenderer = NULL;
 
 // Font and text texture
 TTF_Font *gFont = NULL;
-LTexture gTextTexture;
+LTexture gTextTexture, gTextTexture2;
 
 //Scene sprites
 SDL_Rect gSpriteClips[160], cursorSprite, unitSprite;
@@ -144,7 +143,7 @@ bool LTexture::loadTextMedia(std::string path, std::string text, SDL_Color textC
   } 
   else { 
     //Render initial text 
-    if( !gTextTexture.setText( text, textColor ) ) { 
+    if( !setText( text, textColor ) ) { 
       printf( "Failed to render text texture!\n" ); 
       success = false; 
     } 
