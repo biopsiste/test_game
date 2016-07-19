@@ -11,7 +11,7 @@
 #include "buttons.h"
 #include "animation.h"
 
-#define TILESET_1_PATH      "../resources/iso-64x64-outside_numeri2.png"
+#define TILESET_1_PATH      "../resources/iso-64x64-outside_numeri_transp.png"
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
 using namespace std;
@@ -56,7 +56,9 @@ int main(int argc, char* args[]) {
     bool quit = false;
 
     Point mouse_tile, last_mouse_tile{ -100, -100 };
-    Point sprite_tile{ 1, 1 };
+		Point sprite_tile{ 1, 1 };
+		//Point highl_tile{ 2, 2 };
+		vector<Point> bestpath;
 
     const unsigned char* currentKeyStates;
 
@@ -143,12 +145,18 @@ int main(int argc, char* args[]) {
       mouse_tile = mouse2tile(Point{ mouseX, mouseY });
       if (mouse_tile != last_mouse_tile) {
         cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
+
+				bestpath = findPath_Astar(sprite_tile, mouse_tile);
+
         last_mouse_tile = mouse_tile;
       }
       renderCursor(mouse_tile, &cursorSprite);
 
       // Render unit
-      renderTile(sprite_tile, &unitSprite);
+			renderTile(sprite_tile, &unitSprite);
+
+			// render path
+			for(auto& p : bestpath) renderTile(p, &highlighterSprite);
 
       // Render text
       if (show_text) {

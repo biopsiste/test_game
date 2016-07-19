@@ -54,7 +54,7 @@ TTF_Font *gFont = NULL;
 LTexture gTextTexture, gTextTexture2;
 
 //Scene sprites
-SDL_Rect gSpriteClips[160], cursorSprite, unitSprite;
+SDL_Rect gSpriteClips[160], cursorSprite, unitSprite, highlighterSprite;
 LTexture gSpriteSheetTexture;
 
 LTexture::LTexture() {
@@ -263,8 +263,9 @@ bool loadMedia(std::string path) {
     }
 
     cursorSprite = gSpriteClips[159];
-    unitSprite = gSpriteClips[119];
-  }
+		unitSprite = gSpriteClips[119];
+		highlighterSprite = gSpriteClips[44];
+	}
 
   return success;
 }

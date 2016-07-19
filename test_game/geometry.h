@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include <queue>
+#include <unordered_map>
 
 //Geometry constants
 #define SCREEN_WIDTH  1280
@@ -14,12 +16,39 @@
 #define MAP_H         7
 
 struct Point {
-  int x, y;
+	int x, y;
+
+	uint32_t hash() const {
+		//fast
+		return x * 1812433253 + y;
+
+		//a bit slower, but no collision if x, y are uint32_t
+		//return x >= y ?
+		//	uint64_t(x) * uint64_t(x) + uint64_t(x) + uint64_t(y) :
+		//	uint64_t(x) + uint64_t(y) * uint64_t(y);
+	}
 	bool operator==(const Point& b) const {
 		return x == b.x && y == b.y;
 	}
 	bool operator!=(const Point& b) const {
 		return !(*this == b);
+	}
+	//bool operator<(const Point& b) const {
+	//	return this->hash() < b.hash();
+	//}
+	//bool operator>(const Point& b) const {
+	//	return this->hash() > b.hash();
+	//}
+	//bool operator<=(const Point& b) const {
+	//	return *this == b || *this < b;
+	//}
+	//bool operator>=(const Point& b) const {
+	//	return *this == b || *this > b;
+	//}
+};
+struct PointHasher {
+	uint32_t operator()(const Point& p) const {
+		return p.hash();
 	}
 };
 
@@ -53,6 +82,15 @@ inline bool are_4neighbors(const Point& a, const Point& b) {
 	return (a.x == b.x && abs(a.y - b.y) == 1) || (a.y == b.y && abs(a.x - b.x) == 1);
 }
 
+std::vector<Point> get_4neighbors(const Point& p) {
+	std::vector<Point> vn;
+	if(is_in_map(p.x - 1, p.y)) vn.push_back(Point{ p.x - 1, p.y });
+	if(is_in_map(p.x + 1, p.y)) vn.push_back(Point{ p.x + 1, p.y });
+	if(is_in_map(p.x, p.y - 1)) vn.push_back(Point{ p.x, p.y - 1 });
+	if(is_in_map(p.x, p.y + 1)) vn.push_back(Point{ p.x, p.y + 1 });
+	return vn;
+}
+
 struct Path {
 	std::vector<Point> path;
 
@@ -70,6 +108,7 @@ struct Path {
 	}
 };
 
+/* //deprecated as fuck
 struct TileCandidate {
 	int x, y, counter;
 	TileCandidate(int _x, int _y, int _c) : x(_x), y(_y), counter(_c) {}
@@ -124,4 +163,61 @@ std::vector<Point> findPath(int* map, Point& origin, Point& destination) {
 
 	return path;
 }
+*/
 
+//cost function, alway 1 for now
+int Astar_cost(const Point& a, const Point& b) {
+	return 1;
+};
+
+//manhattan heuristic
+int Astar_heuristic(const Point& a, const Point& b) {
+	return abs(a.x - b.x) + abs(a.y - b.y);
+};
+
+struct Astar_candidate {
+	Point tile; int priority;
+	Astar_candidate(Point _tile, int _priority) : tile(_tile), priority(_priority) {}
+};
+
+struct Astar_candidate_comparator {
+	bool operator() (const Astar_candidate& a, const Astar_candidate& b) const {
+		return a.priority > b.priority;
+	}
+};
+
+std::vector<Point> findPath_Astar(/*int* map,*/ Point& origin, Point& destination) {
+	std::unordered_map<Point, Point, PointHasher> came_from;
+	std::unordered_map<Point, int, PointHasher> cost_so_far;
+	came_from[origin] = origin;
+	cost_so_far[origin] = 0;
+
+	std::priority_queue<Astar_candidate, std::vector<Astar_candidate>, Astar_candidate_comparator> frontier;
+	frontier.emplace(origin, 0);
+	while(!frontier.empty()) {
+		auto current = frontier.top().tile; frontier.pop();
+
+		if(current == destination) break;
+
+		auto ns = get_4neighbors(current);
+		for(auto neighbor : ns) {
+			int new_cost = cost_so_far[current] + Astar_cost(current, neighbor);
+			if(!cost_so_far.count(neighbor) || new_cost < cost_so_far[neighbor]) {
+				cost_so_far[neighbor] = new_cost;
+				int priority = new_cost + Astar_heuristic(neighbor, destination);
+				frontier.emplace(neighbor, priority);
+				came_from[neighbor] = current;
+			}
+		}
+	}
+
+	std::vector<Point> path;
+	Point current_p = destination;
+	path.push_back(current_p);
+	while(current_p != origin) {
+		current_p = came_from[current_p];
+		path.push_back(current_p);
+	}
+	std::reverse(path.begin(), path.end());
+	return path;
+}
