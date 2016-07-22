@@ -13,7 +13,7 @@
 #define TILE_H        64.
 
 #define MAP_W         10
-#define MAP_H         7
+#define MAP_H         10
 
 struct Point {
 	int x, y;
@@ -58,11 +58,11 @@ Point tile2screen(int i, int j) {
   return Point{ x, y };
 }
 
-Point tile2screen(Point tile) {
+Point tile2screen(const Point& tile) {
   return tile2screen(tile.x, tile.y);
 }
 
-Point mouse2tile(Point mouse) {
+Point mouse2tile(const Point& mouse) {
   int x = int( mouse.x );
   int y = int( mouse.y - TILE_H / 2. );
   int I = int( (x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5 );
@@ -165,7 +165,7 @@ std::vector<Point> findPath(int* map, Point& origin, Point& destination) {
 }
 */
 
-//cost function, alway 1 for now
+//cost function, always 1 for now
 int Astar_cost(const Point& a, const Point& b) {
 	return 1;
 };
@@ -186,7 +186,10 @@ struct Astar_candidate_comparator {
 	}
 };
 
-std::vector<Point> findPath_Astar(/*int* map,*/ Point& origin, Point& destination) {
+std::vector<Point> findPath_Astar(/*int* map,*/const Point& origin, const Point& destination) {
+	std::vector<Point> path;
+  if(!is_in_map(destination)) return path;
+
 	std::unordered_map<Point, Point, PointHasher> came_from;
 	std::unordered_map<Point, int, PointHasher> cost_so_far;
 	came_from[origin] = origin;
@@ -211,7 +214,6 @@ std::vector<Point> findPath_Astar(/*int* map,*/ Point& origin, Point& destinatio
 		}
 	}
 
-	std::vector<Point> path;
 	Point current_p = destination;
 	path.push_back(current_p);
 	while(current_p != origin) {

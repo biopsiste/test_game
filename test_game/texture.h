@@ -1,4 +1,15 @@
 #pragma once
+
+//tileset specific definitions
+#define TILESET_COLUMNS   8
+#define TILESET_ROWS      7
+#define TILESET_TILES    56
+
+#define TILESET_UNIT_TILE_INDEX          47
+#define TILESET_CURSOR_TILE_INDEX         7
+#define TILESET_HIGHLIGHTER_TILE_INDEX   15
+
+
 //Texture wrapper class
 class LTexture {
 public:
@@ -54,7 +65,7 @@ TTF_Font *gFont = NULL;
 LTexture gTextTexture, gTextTexture2;
 
 //Scene sprites
-SDL_Rect gSpriteClips[160], cursorSprite, unitSprite, highlighterSprite;
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite;
 LTexture gSpriteSheetTexture;
 
 LTexture::LTexture() {
@@ -253,18 +264,17 @@ bool loadMedia(std::string path) {
     success = false;
   }
   else {
-
-    for (int i = 0; i < 160; ++i) {
-      int r = i / 10, c = i % 10;
+    for (int i = 0; i < TILESET_TILES; ++i) {
+      int r = i / TILESET_COLUMNS, c = i % TILESET_COLUMNS;
       gSpriteClips[i].x = int( TILE_W * c );
       gSpriteClips[i].y = int( TILE_H * r );
       gSpriteClips[i].w = int( TILE_W );
       gSpriteClips[i].h = int( TILE_H );
     }
 
-    cursorSprite = gSpriteClips[159];
-		unitSprite = gSpriteClips[119];
-		highlighterSprite = gSpriteClips[44];
+    cursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
+		unitSprite = gSpriteClips[TILESET_UNIT_TILE_INDEX];
+		highlighterSprite = gSpriteClips[TILESET_HIGHLIGHTER_TILE_INDEX];
 	}
 
   return success;
@@ -291,10 +301,10 @@ void renderTile(int i, int j, SDL_Rect * tile) {
   gSpriteSheetTexture.render(tile2screen(i, j), tile);
 }
 
-void renderTile(Point tile_index, SDL_Rect * tile) {
+void renderTile(const Point& tile_index, SDL_Rect * tile) {
   renderTile(tile_index.x, tile_index.y, tile);
 }
 
-void renderCursor(Point tile_index, SDL_Rect * tile) {
+void renderCursor(const Point& tile_index, SDL_Rect * tile) {
   if( is_in_map(tile_index) ) renderTile(tile_index, tile);
 }

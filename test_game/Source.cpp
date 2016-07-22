@@ -12,6 +12,7 @@
 #include "animation.h"
 
 #define TILESET_1_PATH      "../resources/iso-64x64-outside_numeri_transp.png"
+#define TILESET_2_PATH      "../resources/basic_ground_tiles_64_halftile.png"
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
 using namespace std;
@@ -23,7 +24,7 @@ int main(int argc, char* args[]) {
   }
   else {
     //Load media
-    if (!loadMedia(TILESET_1_PATH)) {
+    if (!loadMedia(TILESET_2_PATH)) {
       printf("Failed to load media!\n");
       exit(-1);
     }
@@ -129,10 +130,18 @@ int main(int argc, char* args[]) {
       SDL_SetRenderDrawColor(gRenderer, 0, 0, 0, 0xFF);
       SDL_RenderClear(gRenderer);
 
+      //compute mouse tile and best path
+      mouse_tile = mouse2tile(Point{ mouseX, mouseY });
+      if(mouse_tile != last_mouse_tile) {
+        cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
+        last_mouse_tile = mouse_tile;
+        bestpath = findPath_Astar(sprite_tile, mouse_tile);
+      }
+
       // Render ground 
       for (int i = 0; i < MAP_W; i++) {
         for (int j = 0; j < MAP_H; j++) {
-          renderTile(i, j, &gSpriteClips[25]);
+          renderTile(i, j, &gSpriteClips[1]);
         }
       }
 
@@ -141,22 +150,14 @@ int main(int argc, char* args[]) {
         gButtons[i].render();
       }
 
+			// render path
+			for(auto& p : bestpath) renderTile(p, &highlighterSprite);
+
       // Render cursor
-      mouse_tile = mouse2tile(Point{ mouseX, mouseY });
-      if (mouse_tile != last_mouse_tile) {
-        cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
-
-				bestpath = findPath_Astar(sprite_tile, mouse_tile);
-
-        last_mouse_tile = mouse_tile;
-      }
       renderCursor(mouse_tile, &cursorSprite);
 
       // Render unit
 			renderTile(sprite_tile, &unitSprite);
-
-			// render path
-			for(auto& p : bestpath) renderTile(p, &highlighterSprite);
 
       // Render text
       if (show_text) {
