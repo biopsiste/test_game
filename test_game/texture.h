@@ -1,10 +1,10 @@
 #pragma once
 
-#define USE_TILESET                      1
+#define USE_TILESET                      2
 
 #if USE_TILESET == 1
 //tileset 1
-#define TILESET_PATH                   "../resources/basic_ground_tiles_64_halftile.png"
+#define TILESET_PATH                     "../resources/iso-64x64-outside_numeri_transp.png"
 
 #define TILESET_COLUMNS                  10
 #define TILESET_ROWS                     16
@@ -15,7 +15,7 @@
 #define TILESET_HIGHLIGHTER_TILE_INDEX   44
 #elif USE_TILESET == 2
 //tileset 2
-#define TILESET_PATH                   "../resources/iso-64x64-outside_numeri_transp.png"
+#define TILESET_PATH                     "../resources/basic_ground_tiles_64_halftile.png"
 
 #define TILESET_COLUMNS                  8
 #define TILESET_ROWS                     7
