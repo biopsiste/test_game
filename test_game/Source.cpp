@@ -68,8 +68,12 @@ int main(int argc, char* args[]) {
       gButtons[i].setPosition(50 + i*BUTTON_WIDTH, 50);
     }
 
+
+    // register a timer
+    //SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, move_timer_cb, &sprite_tile); //call callback every 1000 msec
+
+
     // MAIN LOOP
-    SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, move_timer_cb, &sprite_tile); //call callback every 1000 msec
     while (!quit) {
       // Handle events on queue
       while (SDL_PollEvent(&e) != 0) {
@@ -131,9 +135,9 @@ int main(int argc, char* args[]) {
       SDL_RenderClear(gRenderer);
 
       //compute mouse tile and best path
-      mouse_tile = mouse2tile(Point{ mouseX, mouseY });
+      mouse_tile = mouse2tile({ mouseX, mouseY });
       if(mouse_tile != last_mouse_tile) {
-        cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
+        //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
         last_mouse_tile = mouse_tile;
         bestpath = findPath_Astar(sprite_tile, mouse_tile);
       }
@@ -164,8 +168,8 @@ int main(int argc, char* args[]) {
         gTextTexture.setText(MESSAGE, currentColor);
         gTextTexture.render(SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4);
       }
-      gTextTexture2.setText("multiline text", textGreen);
-      gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
+      //gTextTexture2.setText("multiline text", textGreen);
+      //gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
 
       //Update screen
       SDL_RenderPresent(gRenderer);

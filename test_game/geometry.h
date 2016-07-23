@@ -12,8 +12,8 @@
 #define TILE_W        64.
 #define TILE_H        64.
 
-#define MAP_W         10
-#define MAP_H         10
+#define MAP_W         50
+#define MAP_H         50
 
 struct Point {
 	int x, y;
