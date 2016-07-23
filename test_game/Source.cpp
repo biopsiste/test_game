@@ -1,17 +1,25 @@
-//Using SDL, SDL_image, standard math, and strings
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
+
+// STL include
+#include <iostream>
+#include <cstdio>
+#include <string>
+#include <vector>
+
+// SDL include
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h> 
-#include <cstdio>
-#include <string>
-#include <iostream>
 
+// GOTYAY include
 #include "geometry.h"
 #include "texture.h"
 #include "buttons.h"
 #include "animation.h"
 #include "textbox.h"
+#include "battlemap.h"
 
+// defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 //#define SHOW_PATH
 //#define SHOW_TEXT
@@ -159,6 +167,7 @@ int main(int argc, char* args[]) {
 
     //compute mouse tile and best path
     mouse_tile = mouse2tile({ mouseX + camera.x, mouseY + camera.y });
+    auto mouse_tile_high = mouse2tile_high({ mouseX + camera.x, mouseY + camera.y });
     if (mouse_tile != last_mouse_tile) {
       //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
       //auto sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
@@ -172,7 +181,7 @@ int main(int argc, char* args[]) {
       for (int j = 0; j < MAP_H; j++) {
         SDL_Rect *currentSprite;
         if (i < MAP_W / 2 && j < MAP_H / 2) currentSprite = &gSpriteClips[2];
-        else currentSprite = &gSpriteClips[1];
+        else currentSprite = &gSpriteClips[15];
         renderTile(camera, { i, j }, currentSprite);
       }
     }
@@ -190,11 +199,13 @@ int main(int argc, char* args[]) {
 #endif
 
     // Render cursor
-//    renderCursor(camera, mouse_tile, &cursorSprite);
-    smart_renderCursor(camera, mouse_tile);
+//    renderCursor(camera, mouse_tile, &LowCursorSprite);
+    renderCursor(camera, mouse_tile_high, &HighCursorSprite);
+//    smart_renderCursor(camera, mouse_tile);
 
     // Render unit
     renderTile(camera, sprite_tile, &unitSprite);
+
 
 #ifdef SHOW_TEXT
     // Render text

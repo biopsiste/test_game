@@ -75,6 +75,13 @@ Point mouse2tile(const Point& mouse) {
   int J = int( -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5 );
   return Point{I, J};
 }
+Point mouse2tile_high(const Point& mouse) {
+  int x = int(mouse.x);
+  int y = int(mouse.y - TILE_H / 2. + 2*TILE_GROUND_HEIGHT_OFFSET);
+  int I = int((x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5);
+  int J = int(-(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5);
+  return Point{ I, J };
+}
 
 inline bool is_in_map(const int& px, const int& py) {
 	return px >= 0 && px < MAP_W && py >= 0 && py < MAP_H;
