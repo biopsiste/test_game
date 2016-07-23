@@ -1,4 +1,6 @@
 #pragma once
+#include <fstream>
+#include <sstream>
 
 #define USE_TILESET                      2
 
@@ -320,3 +322,78 @@ void smart_renderCursor(const Point& cam, const Point& tile_index) {
     renderTile(cam, tile_index, currentCursor);
   }
 }
+
+struct Cube {
+  int height; //even height: is an halftile, odd height: is full sized cube
+  int sprite_index;
+  bool passable;
+  //bool empty;
+
+  Cube() : height{}, sprite_index{}, passable(true)/*, empty(false)*/ {}
+  Cube(int _h, int _si, bool _pass) : height(_h), sprite_index(_si), passable(_pass)/*, empty(false)*/ {}
+  Cube(std::string entry) {
+    std::istringstream istr(entry);
+    std::string token;
+    std::getline(istr, token, ','); sprite_index = std::stoi(token);
+    std::getline(istr, token, ','); height = std::stoi(token);
+    std::getline(istr, token, ','); passable = std::stoi(token);
+    //std::getline(istr, token, ','); empty = std::stoi(token);
+    //std::cout << sprite_index << " " << height << " " << passable << " " << empty << std::endl; system("pause");
+  }
+};
+
+struct CubeStack {
+  std::vector<Cube> s;
+
+  CubeStack() {}
+  CubeStack(std::string stackentry) {
+    std::istringstream istr(stackentry);
+    std::string token;
+    while(std::getline(istr, token, '|')) {
+      //std::cout << token << std::endl; //system("pause");
+      s.emplace_back(token);
+    }
+    //std::cout << "---" << std::endl; system("pause");
+  }
+
+  void render(const Point& cam, const Point& pos) {
+    for(int i = 0; i < s.size(); ++i) {
+      gSpriteSheetTexture.render(tile2screen(pos) - Point{ 0, i*int(TILE_H) / 2 } -cam, &gSpriteClips[s[i].sprite_index]);
+    }
+  }
+};
+
+struct Map {
+  //std::vector<MapLayer> m;
+  std::vector<std::vector<CubeStack>> m;
+
+  Map(std::string filename) {
+    std::ifstream ifi(filename);
+    std::string line, stackentry; int w, h;
+    std::getline(ifi, line); //ignore header
+    ifi >> w >> h; //std::cout << w << " " << h << std::endl;
+    std::getline(ifi, line); //ignore w h
+    m.assign(w, std::vector<CubeStack>(h));
+    int i = 0;
+    while(std::getline(ifi, line)) {
+      //std::cout << line << std::endl; system("pause");
+      std::istringstream istr(line);
+      int j = 0;
+      while(istr >> stackentry) {
+        //std::cout << stackentry << std::endl;
+        //std::cout << i << " " << j << std::endl;
+        m[i][j] = CubeStack(stackentry);
+        j++;
+      }
+      i++;
+    }
+  }
+
+  void render(const Point& cam) {
+    for(int i = 0; i < m.size(); i++) {
+      for(int j = 0; j < m[0].size(); j++) {
+        m[i][j].render(cam, { i,j });
+      }
+    }
+  }
+};

@@ -72,6 +72,8 @@ int main(int argc, char* args[]) {
   //sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
   //Point highl_tile{ 2, 2 };
   vector<Point> bestpath;
+  Map map("../resources/test_map.txt");
+
 
   const unsigned char* currentKeyStates;
 
@@ -177,14 +179,15 @@ int main(int argc, char* args[]) {
     }
 
     // Render ground 
-    for (int i = 0; i < MAP_W; i++) {
-      for (int j = 0; j < MAP_H; j++) {
-        SDL_Rect *currentSprite;
-        if (i < MAP_W / 2 && j < MAP_H / 2) currentSprite = &gSpriteClips[2];
-        else currentSprite = &gSpriteClips[15];
-        renderTile(camera, { i, j }, currentSprite);
-      }
-    }
+    //for (int i = 0; i < MAP_W; i++) {
+    //  for (int j = 0; j < MAP_H; j++) {
+    //    SDL_Rect *currentSprite;
+    //    if (i < MAP_W / 2 && j < MAP_H / 2) currentSprite = &gSpriteClips[2];
+    //    else currentSprite = &gSpriteClips[15];
+    //    renderTile(camera, { i, j }, currentSprite);
+    //  }
+    //}
+    map.render(camera);
 
 #ifdef SHOW_BUTTONS
     //Render buttons 
