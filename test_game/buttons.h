@@ -34,8 +34,6 @@ private:
   LButtonSprite mCurrentSprite; 
 };
 
-LButton gButtons[TOTAL_BUTTONS];
-
 LButton::LButton() { 
   mPosition.x = 0; 
   mPosition.y = 0; 

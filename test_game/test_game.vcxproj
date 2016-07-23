@@ -159,6 +159,7 @@
     <ClInclude Include="animation.h" />
     <ClInclude Include="buttons.h" />
     <ClInclude Include="geometry.h" />
+    <ClInclude Include="textbox.h" />
     <ClInclude Include="texture.h" />
   </ItemGroup>
   <ItemGroup>

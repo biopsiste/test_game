@@ -1,24 +1,30 @@
 #pragma once
 
-//tileset specific definitions
-//tileset 1
-//#define TILESET_COLUMNS  10
-//#define TILESET_ROWS     16
-//#define TILESET_TILES   160
-//
-//#define TILESET_UNIT_TILE_INDEX         119
-//#define TILESET_CURSOR_TILE_INDEX       159
-//#define TILESET_HIGHLIGHTER_TILE_INDEX   44
+#define USE_TILESET                      1
 
+#if USE_TILESET == 1
+//tileset 1
+#define TILESET_PATH                   "../resources/basic_ground_tiles_64_halftile.png"
+
+#define TILESET_COLUMNS                  10
+#define TILESET_ROWS                     16
+#define TILESET_TILES                    160
+
+#define TILESET_UNIT_TILE_INDEX          119
+#define TILESET_CURSOR_TILE_INDEX        159
+#define TILESET_HIGHLIGHTER_TILE_INDEX   44
+#elif USE_TILESET == 2
 //tileset 2
-#define TILESET_COLUMNS   8
-#define TILESET_ROWS      7
-#define TILESET_TILES    56
+#define TILESET_PATH                   "../resources/iso-64x64-outside_numeri_transp.png"
+
+#define TILESET_COLUMNS                  8
+#define TILESET_ROWS                     7
+#define TILESET_TILES                    56
 
 #define TILESET_UNIT_TILE_INDEX          47
-#define TILESET_CURSOR_TILE_INDEX         7
+#define TILESET_CURSOR_TILE_INDEX        7
 #define TILESET_HIGHLIGHTER_TILE_INDEX   15
-
+#endif
 
 //Texture wrapper class
 class LTexture {
@@ -28,18 +34,18 @@ public:
   //Deallocates memory
   ~LTexture();
 
-  //Loads image at specified path
+  // Loads image at specified path
   bool loadFromFile(std::string path);
-  // Loads text from .ttf file
+  // Loads font from .ttf file
   bool loadTextMedia(std::string path, std::string text, SDL_Color textColor);
-  //Creates image from font string 
+  // Set text and color
   bool setText( std::string textureText, SDL_Color textColor );
 
   //Deallocates texture
   void free();
 
   //Renders texture at given point
-  //void render(int x, int y, SDL_Rect* clip = NULL);
+  void render(int x, int y, SDL_Rect* clip = NULL);
   void render(Point p, SDL_Rect* clip = NULL);
 
   //Gets image dimensions
@@ -159,7 +165,7 @@ bool LTexture::loadTextMedia(std::string path, std::string text, SDL_Color textC
   //Open the font 
   gFont = TTF_OpenFont( path.c_str(), 35 ); 
   if( gFont == NULL ) { 
-    printf( "Failed to load lazy font! SDL_ttf Error: %s\n", TTF_GetError() ); 
+    printf( "Failed to load font %s! SDL_ttf Error: %s\n", path.c_str(), TTF_GetError() ); 
     success = false; 
   } 
   else { 
@@ -183,23 +189,9 @@ void LTexture::free() {
   }
 }
 
-//void LTexture::render(int x, int y, SDL_Rect* clip) {
-//  //Set rendering space and render to screen
-//  SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-//
-//  //Set clip rendering dimensions
-//  if (clip != NULL) {
-//    renderQuad.w = clip->w;
-//    renderQuad.h = clip->h;
-//  }
-//
-//  //Render to screen
-//  SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
-//}
-
-void LTexture::render(Point p, SDL_Rect* clip) {
+void LTexture::render(int x, int y, SDL_Rect* clip) {
   //Set rendering space and render to screen
-  SDL_Rect renderQuad = { p.x, p.y, mWidth, mHeight };
+  SDL_Rect renderQuad = { x, y, mWidth, mHeight };
 
   //Set clip rendering dimensions
   if (clip != NULL) {
@@ -209,6 +201,9 @@ void LTexture::render(Point p, SDL_Rect* clip) {
 
   //Render to screen
   SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
+}
+void LTexture::render(Point p, SDL_Rect* clip) {
+  render(p.x, p.y, clip);
 }
 
 int LTexture::getWidth() {
