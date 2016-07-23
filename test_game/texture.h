@@ -1,6 +1,16 @@
 #pragma once
 
 //tileset specific definitions
+//tileset 1
+//#define TILESET_COLUMNS  10
+//#define TILESET_ROWS     16
+//#define TILESET_TILES   160
+//
+//#define TILESET_UNIT_TILE_INDEX         119
+//#define TILESET_CURSOR_TILE_INDEX       159
+//#define TILESET_HIGHLIGHTER_TILE_INDEX   44
+
+//tileset 2
 #define TILESET_COLUMNS   8
 #define TILESET_ROWS      7
 #define TILESET_TILES    56
@@ -29,7 +39,7 @@ public:
   void free();
 
   //Renders texture at given point
-  void render(int x, int y, SDL_Rect* clip = NULL);
+  //void render(int x, int y, SDL_Rect* clip = NULL);
   void render(Point p, SDL_Rect* clip = NULL);
 
   //Gets image dimensions
@@ -173,19 +183,19 @@ void LTexture::free() {
   }
 }
 
-void LTexture::render(int x, int y, SDL_Rect* clip) {
-  //Set rendering space and render to screen
-  SDL_Rect renderQuad = { x, y, mWidth, mHeight };
-
-  //Set clip rendering dimensions
-  if (clip != NULL) {
-    renderQuad.w = clip->w;
-    renderQuad.h = clip->h;
-  }
-
-  //Render to screen
-  SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
-}
+//void LTexture::render(int x, int y, SDL_Rect* clip) {
+//  //Set rendering space and render to screen
+//  SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+//
+//  //Set clip rendering dimensions
+//  if (clip != NULL) {
+//    renderQuad.w = clip->w;
+//    renderQuad.h = clip->h;
+//  }
+//
+//  //Render to screen
+//  SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
+//}
 
 void LTexture::render(Point p, SDL_Rect* clip) {
   //Set rendering space and render to screen
@@ -297,14 +307,10 @@ void close() {
 
 ///////////// useful render function
 
-void renderTile(int i, int j, SDL_Rect * tile) {
-  gSpriteSheetTexture.render(tile2screen(i, j), tile);
+void renderTile(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
+  gSpriteSheetTexture.render(tile2screen(tile_index) - cam, tile);
 }
 
-void renderTile(const Point& tile_index, SDL_Rect * tile) {
-  renderTile(tile_index.x, tile_index.y, tile);
-}
-
-void renderCursor(const Point& tile_index, SDL_Rect * tile) {
-  if( is_in_map(tile_index) ) renderTile(tile_index, tile);
+void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
+  if( is_in_map(tile_index) ) renderTile(cam, tile_index, tile);
 }

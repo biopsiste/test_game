@@ -93,7 +93,7 @@ void LButton::handleEvent(SDL_Event* e) {
 
 void LButton::render() { 
   //Show current button sprite 
-  gSpriteSheetTexture.render( mPosition.x, mPosition.y, &gSpriteClips[ mCurrentSprite ] );
+  gSpriteSheetTexture.render({ mPosition.x, mPosition.y }, &gSpriteClips[mCurrentSprite]);
 }
 
 

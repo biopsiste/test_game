@@ -8,12 +8,14 @@
 #define SCREEN_HEIGHT 672
 
 #define OFFSET_X      400.
-#define OFFSET_Y      150.
+#define OFFSET_Y       30.
+
 #define TILE_W        64.
 #define TILE_H        64.
+#define TILE_GROUND_HEIGHT_OFFSET 16.
 
-#define MAP_W         50
-#define MAP_H         50
+#define MAP_W         30
+#define MAP_H         20
 
 struct Point {
 	int x, y;
@@ -45,6 +47,23 @@ struct Point {
 	//bool operator>=(const Point& b) const {
 	//	return *this == b || *this > b;
 	//}
+  Point& operator+=(const Point& b) {
+    this->x += b.x; this->y += b.y;
+    return *this;
+  }
+  friend Point operator+(Point th, const Point& b) {
+    th += b;
+    return th;
+  }
+  Point& operator-=(const Point& b) {
+    this->x -= b.x; this->y -= b.y;
+    return *this;
+  }
+  friend Point operator-(Point th, const Point& b) {
+    th -= b;
+    return th;
+  }
+
 };
 struct PointHasher {
 	uint32_t operator()(const Point& p) const {
@@ -53,8 +72,8 @@ struct PointHasher {
 };
 
 Point tile2screen(int i, int j) {
-  int x = int( (i - j) * TILE_W / 2 + OFFSET_X + 0.5 );
-  int y = int( (i + j) * TILE_H / 4 + OFFSET_Y + 0.5 );
+  int x = int((i - j) * TILE_W / 2 + OFFSET_X /*+ 0.5*/);
+  int y = int((i + j) * TILE_H / 4 + OFFSET_Y /*+ 0.5*/);
   return Point{ x, y };
 }
 
@@ -64,7 +83,7 @@ Point tile2screen(const Point& tile) {
 
 Point mouse2tile(const Point& mouse) {
   int x = int( mouse.x );
-  int y = int( mouse.y - TILE_H / 2. );
+  int y = int( mouse.y - TILE_H / 2. + TILE_GROUND_HEIGHT_OFFSET);
   int I = int( (x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5 );
   int J = int( -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5 );
   return Point{I, J};

@@ -58,6 +58,8 @@ int main(int argc, char* args[]) {
 
     Point mouse_tile, last_mouse_tile{ -100, -100 };
 		Point sprite_tile{ 1, 1 };
+    Point camera{ 0, 0 }, north = tile2screen({ 0, 0 }), south = tile2screen({ MAP_W - 1, MAP_H - 1 }), west = tile2screen({ 0, MAP_H - 1 }), east = tile2screen({ MAP_W - 1 , 0 });
+    //sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
 		//Point highl_tile{ 2, 2 };
 		vector<Point> bestpath;
 
@@ -75,6 +77,7 @@ int main(int argc, char* args[]) {
 
     // MAIN LOOP
     while (!quit) {
+
       // Handle events on queue
       while (SDL_PollEvent(&e) != 0) {
         // User requests quit
@@ -91,6 +94,8 @@ int main(int argc, char* args[]) {
           break;
         }
         if (e.type == SDL_KEYDOWN) {
+          int winH, winW; SDL_GetWindowSize(gWindow, &winW, &winH);
+
           switch (e.key.keysym.sym) {
           case SDLK_d:                     // hit D to hide/display text
             show_text = (show_text == true) ? false : true;
@@ -98,10 +103,26 @@ int main(int argc, char* args[]) {
           case SDLK_c:                     // change text color holding C
             currentColor = textRed;
             break;
+
+          // move camera
+          case SDLK_DOWN:
+            camera.y += 10; if(camera.y + winH > south.y + 64 + 30) camera.y = south.y + 64 + 30 - winH;
+            break;
+          case SDLK_UP:
+            camera.y -= 10; if(camera.y < north.y - 30) camera.y = north.y - 30;
+            break;
+          case SDLK_LEFT:
+            camera.x -= 10; if(camera.x < west.x - 30) camera.x = west.x - 30;
+            break;
+          case SDLK_RIGHT:
+            camera.x += 10; if(camera.x + winW > east.x + 64 + 30) camera.x = east.x + 64 + 30 - winW;
+            break;
+
           default:
             break;
           }
         }
+
         if (e.type == SDL_KEYUP) {
           switch (e.key.keysym.sym) {
           case SDLK_c:                     // change text color holding C
@@ -135,9 +156,11 @@ int main(int argc, char* args[]) {
       SDL_RenderClear(gRenderer);
 
       //compute mouse tile and best path
-      mouse_tile = mouse2tile({ mouseX, mouseY });
+      mouse_tile = mouse2tile({ mouseX + camera.x, mouseY + camera.y });
       if(mouse_tile != last_mouse_tile) {
         //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
+        //auto sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
+        //cout << "su (" << su.x << "," << su.y << ") " << "sx (" << sx.x << "," << sx.y << ") " << "giu (" << giu.x << "," << giu.y << ") " << "dx (" << dx.x << "," << dx.y << ")" << endl;
         last_mouse_tile = mouse_tile;
         bestpath = findPath_Astar(sprite_tile, mouse_tile);
       }
@@ -145,7 +168,7 @@ int main(int argc, char* args[]) {
       // Render ground 
       for (int i = 0; i < MAP_W; i++) {
         for (int j = 0; j < MAP_H; j++) {
-          renderTile(i, j, &gSpriteClips[1]);
+          renderTile(camera, { i, j }, &gSpriteClips[25]);
         }
       }
 
@@ -155,18 +178,18 @@ int main(int argc, char* args[]) {
       }
 
 			// render path
-			for(auto& p : bestpath) renderTile(p, &highlighterSprite);
+      for(auto& p : bestpath) renderTile(camera, p, &highlighterSprite);
 
       // Render cursor
-      renderCursor(mouse_tile, &cursorSprite);
+      renderCursor(camera, mouse_tile, &cursorSprite);
 
       // Render unit
-			renderTile(sprite_tile, &unitSprite);
+      renderTile(camera, sprite_tile, &unitSprite);
 
       // Render text
       if (show_text) {
         gTextTexture.setText(MESSAGE, currentColor);
-        gTextTexture.render(SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4);
+        gTextTexture.render({ SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4 });
       }
       //gTextTexture2.setText("multiline text", textGreen);
       //gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
