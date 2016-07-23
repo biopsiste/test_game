@@ -13,7 +13,9 @@
 #include "textbox.h"
 
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
-
+//#define SHOW_PATH
+//#define SHOW_TEXT
+//#define SHOW_BUTTONS
 
 LButton gButtons[TOTAL_BUTTONS];
 
@@ -168,31 +170,41 @@ int main(int argc, char* args[]) {
     // Render ground 
     for (int i = 0; i < MAP_W; i++) {
       for (int j = 0; j < MAP_H; j++) {
-        renderTile(camera, { i, j }, &gSpriteClips[25]);
+        SDL_Rect *currentSprite;
+        if (i < MAP_W / 2 && j < MAP_H / 2) currentSprite = &gSpriteClips[2];
+        else currentSprite = &gSpriteClips[1];
+        renderTile(camera, { i, j }, currentSprite);
       }
     }
 
+#ifdef SHOW_BUTTONS
     //Render buttons 
     for (int i = 0; i < TOTAL_BUTTONS; ++i) {
       gButtons[i].render();
     }
+#endif
 
+#ifdef SHOW_PATH
     // render path
     for (auto& p : bestpath) renderTile(camera, p, &highlighterSprite);
+#endif
 
     // Render cursor
-    renderCursor(camera, mouse_tile, &cursorSprite);
+//    renderCursor(camera, mouse_tile, &cursorSprite);
+    smart_renderCursor(camera, mouse_tile);
 
     // Render unit
     renderTile(camera, sprite_tile, &unitSprite);
 
+#ifdef SHOW_TEXT
     // Render text
     if (show_text) {
       gTextTexture.setText(MESSAGE, currentColor);
       gTextTexture.render({ SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4 });
     }
-    //gTextTexture2.setText("multiline text", textGreen);
-    //gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
+    gTextTexture2.setText("multiline text", textGreen);
+    gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
+#endif
 
     //Update screen
     SDL_RenderPresent(gRenderer);

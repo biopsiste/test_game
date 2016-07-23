@@ -81,7 +81,7 @@ TTF_Font *gFont = NULL;
 LTexture gTextTexture, gTextTexture2;
 
 //Scene sprites
-SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite;
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
 LTexture gSpriteSheetTexture;
 
 LTexture::LTexture() {
@@ -278,6 +278,8 @@ bool loadMedia(std::string path) {
     }
 
     cursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
+    HighCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX-1];
+    LowCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
 		unitSprite = gSpriteClips[TILESET_UNIT_TILE_INDEX];
 		highlighterSprite = gSpriteClips[TILESET_HIGHLIGHTER_TILE_INDEX];
 	}
@@ -307,5 +309,14 @@ void renderTile(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
 }
 
 void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
-  if( is_in_map(tile_index) ) renderTile(cam, tile_index, tile);
+  if (is_in_map(tile_index)) renderTile(cam, tile_index, tile);
+}
+
+void smart_renderCursor(const Point& cam, const Point& tile_index) {
+  if (is_in_map(tile_index)) {
+    SDL_Rect * currentCursor;
+    if (tile_index.x < MAP_W / 2 && tile_index.y < MAP_H / 2) currentCursor = &HighCursorSprite;
+    else currentCursor = &LowCursorSprite;
+    renderTile(cam, tile_index, currentCursor);
+  }
 }
