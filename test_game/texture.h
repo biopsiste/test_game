@@ -314,28 +314,20 @@ void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
   if (is_in_map(tile_index)) renderTile(cam, tile_index, tile);
 }
 
-void smart_renderCursor(const Point& cam, const Point& tile_index) {
-  if (is_in_map(tile_index)) {
-    SDL_Rect * currentCursor;
-    if (tile_index.x < MAP_W / 2 && tile_index.y < MAP_H / 2) currentCursor = &HighCursorSprite;
-    else currentCursor = &LowCursorSprite;
-    renderTile(cam, tile_index, currentCursor);
-  }
-}
-
 struct Cube {
-  int height; //even height: is an halftile, odd height: is full sized cube
+  int altitude; //0: base level, 1: half-tile height, 2: full height
   int sprite_index;
   bool passable;
   //bool empty;
+  Point coords;
 
-  Cube() : height{}, sprite_index{}, passable(true)/*, empty(false)*/ {}
-  Cube(int _h, int _si, bool _pass) : height(_h), sprite_index(_si), passable(_pass)/*, empty(false)*/ {}
-  Cube(std::string entry) {
+  Cube() : altitude{}, sprite_index{}, passable(true)/*, empty(false)*/ {}
+  Cube(int _h, int _si, bool _pass) : altitude(_h), sprite_index(_si), passable(_pass)/*, empty(false)*/ {}
+  Cube(Point _coords, std::string entry) : coords(_coords) {
     std::istringstream istr(entry);
     std::string token;
     std::getline(istr, token, ','); sprite_index = std::stoi(token);
-    std::getline(istr, token, ','); height = std::stoi(token);
+    std::getline(istr, token, ','); altitude = std::stoi(token);
     std::getline(istr, token, ','); passable = std::stoi(token);
     //std::getline(istr, token, ','); empty = std::stoi(token);
     //std::cout << sprite_index << " " << height << " " << passable << " " << empty << std::endl; system("pause");
@@ -344,21 +336,22 @@ struct Cube {
 
 struct CubeStack {
   std::vector<Cube> s;
+  Point coords;
 
   CubeStack() {}
-  CubeStack(std::string stackentry) {
+  CubeStack(Point _coords, std::string stackentry) : coords(_coords) {
     std::istringstream istr(stackentry);
     std::string token;
     while(std::getline(istr, token, '|')) {
       //std::cout << token << std::endl; //system("pause");
-      s.emplace_back(token);
+      s.emplace_back(_coords, token);
     }
     //std::cout << "---" << std::endl; system("pause");
   }
 
-  void render(const Point& cam, const Point& pos) {
+  void render(const Point& cam) {
     for(int i = 0; i < s.size(); ++i) {
-      gSpriteSheetTexture.render(tile2screen(pos) - Point{ 0, i*int(TILE_H) / 2 } -cam, &gSpriteClips[s[i].sprite_index]);
+      gSpriteSheetTexture.render(tile2screen(coords) - Point{ 0, i*int(TILE_H) / 2 } - cam, &gSpriteClips[s[i].sprite_index]);
     }
   }
 };
@@ -382,7 +375,7 @@ struct Map {
       while(istr >> stackentry) {
         //std::cout << stackentry << std::endl;
         //std::cout << i << " " << j << std::endl;
-        m[i][j] = CubeStack(stackentry);
+        m[i][j] = CubeStack({i,j}, stackentry);
         j++;
       }
       i++;
@@ -392,8 +385,16 @@ struct Map {
   void render(const Point& cam) {
     for(int i = 0; i < m.size(); i++) {
       for(int j = 0; j < m[0].size(); j++) {
-        m[i][j].render(cam, { i,j });
+        m[i][j].render(cam);
       }
     }
   }
 };
+
+// not working for now
+void smart_renderCursor(const Map& map, const Point& cam, const Point& tile_index, SDL_Rect *sprite) {
+  if(is_in_map(tile_index)) {
+    int alt_offset = map.m[tile_index.x][tile_index.x].s[0].altitude * int(TILE_H) / 2;
+    gSpriteSheetTexture.render(tile2screen(tile_index) + Point{0, -alt_offset} - cam, sprite);
+  }
+}

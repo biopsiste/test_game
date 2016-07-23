@@ -202,9 +202,9 @@ int main(int argc, char* args[]) {
 #endif
 
     // Render cursor
-//    renderCursor(camera, mouse_tile, &LowCursorSprite);
+    //renderCursor(camera, mouse_tile, &LowCursorSprite);
     renderCursor(camera, mouse_tile_high, &HighCursorSprite);
-//    smart_renderCursor(camera, mouse_tile);
+    //smart_renderCursor(map, camera, mouse_tile, &LowCursorSprite);
 
     // Render unit
     renderTile(camera, sprite_tile, &unitSprite);
