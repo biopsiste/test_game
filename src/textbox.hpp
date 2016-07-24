@@ -9,18 +9,14 @@ SDL_Color textRed = { 255,  0,  0 };
 SDL_Color textGreen = { 0,255,  0 };
 SDL_Color textBlue = { 0,  0,255 };
 
-class LTextTexture {
+class LTextTexture : public LTexture{
 public:
-  LTexture texture;
   TTF_Font *font;
 
   // Load font from .ttf file
   bool loadFormat(std::string ttf_path, int size);
   // set text and format
   bool loadText(std::string Text, SDL_Color textColor);
-  // render
-  void render(int x, int y, SDL_Rect* clip = NULL);
-
 };
 
 bool LTextTexture::loadFormat(std::string ttf_path, int size) {
@@ -35,7 +31,7 @@ bool LTextTexture::loadFormat(std::string ttf_path, int size) {
 
 bool LTextTexture::loadText(std::string Text, SDL_Color textColor) {
   //Get rid of preexisting texture 
-  texture.free();
+  free();
 
   SDL_Surface* textSurface = TTF_RenderText_Solid(font, Text.c_str(), textColor);
   if (textSurface == NULL) {
@@ -43,24 +39,19 @@ bool LTextTexture::loadText(std::string Text, SDL_Color textColor) {
   }
   else {
     //Create texture from surface pixels 
-    texture.mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
-    if (texture.mTexture == NULL) {
+    mTexture = SDL_CreateTextureFromSurface(gRenderer, textSurface);
+    if (mTexture == NULL) {
       printf("Unable to create texture from rendered text! SDL Error: %s\n", SDL_GetError());
     }
     else {
       //Get image dimensions 
-      texture.mWidth = textSurface->w;
-      texture.mHeight = textSurface->h;
+      mWidth = textSurface->w;
+      mHeight = textSurface->h;
     }
 
     //Get rid of old surface 
     SDL_FreeSurface(textSurface);
   }
   //Return success 
-  return texture.mTexture != NULL;
+  return mTexture != NULL;
 }
-
-void LTextTexture::render(int x, int y, SDL_Rect* clip /* = NULL */) {
-  texture.render(x,y);
-}
-
