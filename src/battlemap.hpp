@@ -4,19 +4,19 @@
 struct Cube {
   int altitude;                   //0: base level, 1: half-tile height, 2: full height
   int sprite_index;
-  bool passable;
+  int traversability;             // 0, ... , N to achieve the slow/haste effects of terrain, N is for wall
   Point base_coords, flat_coords, screen_coords;
   int stack_index;
 
-  Cube() : altitude{}, sprite_index{}, passable(true) {}
-  Cube(int _h, int _si, bool _pass) : altitude(_h), sprite_index(_si), passable(_pass) {}
+  Cube() : altitude{}, sprite_index{}, traversability(true) {}
+  Cube(int _h, int _si, int _traversability) : altitude(_h), sprite_index(_si), traversability(_traversability) {}
   Cube(int _stack_index, Point _base_coords, Point _flat_coords, Point _scr_coords, std::string entry) :
     stack_index(_stack_index), base_coords(_base_coords), flat_coords(_flat_coords), screen_coords(_scr_coords) {
     std::istringstream istr(entry);
     std::string token;
     std::getline(istr, token, ','); sprite_index = std::stoi(token);
     std::getline(istr, token, ','); altitude = std::stoi(token);
-    std::getline(istr, token, ','); passable = std::stoi(token);
+    std::getline(istr, token, ','); traversability = std::stoi(token);
     //std::getline(istr, token, ','); empty = std::stoi(token);
     //std::cout << sprite_index << " " << height << " " << passable << " " << empty << std::endl; system("pause");
   }
@@ -48,7 +48,7 @@ struct CubeStack {
   }
 
   void render(const Point& cam) {
-    for(int i = 0; i < s.size(); ++i) {
+    for(size_t i = 0; i < s.size(); ++i) {
       s[i].render(cam);
     }
   }

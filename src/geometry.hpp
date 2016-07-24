@@ -12,7 +12,7 @@
 
 #define TILE_W                    64.
 #define TILE_H                    64.
-#define TILE_GROUND_HEIGHT_OFFSET 16.
+#define TILE_GROUND_HEIGHT_OFFSET 16
 
 //#define MAP_W                     30
 //#define MAP_H                     20

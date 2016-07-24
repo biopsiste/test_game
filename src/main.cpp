@@ -23,10 +23,11 @@
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
 //#define SHOW_PATH
-//#define SHOW_TEXT
+#define SHOW_TEXT
 //#define SHOW_BUTTONS
 
 LButton gButtons[TOTAL_BUTTONS];
+TTF_Font *LazyFont, *GoodDogFont;
 
 using namespace std;
 
@@ -45,21 +46,19 @@ int main(int argc, char* args[]) {
 
   //Load media
   if (!loadMedia(TILESET_PATH)) {
-    printf("Failed to load media!\n");
+    printf("Failed to load media!\n"); 
     exit(-3);
   }
 
   SDL_Color currentColor = textWhite;
-  if (!gTextTexture.loadTextMedia("../resources/sample.ttf", MESSAGE, currentColor)) {
+  LTextTexture label;
+  if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
     printf("Failed to load text media!\n");
-    exit(-3);
+    exit(-4);
   }
-  if (!gTextTexture2.loadTextMedia("../resources/sample.ttf", "multiline text", textGreen)) {
-    printf("Failed to load text media!\n");
-    exit(-3);
-  }
+  label.loadText("DIOCANE", textRed);
 
-  //Event handler
+  // Event handler
   SDL_Event e;
 
   // General variables
@@ -216,13 +215,8 @@ int main(int argc, char* args[]) {
 
 
 #ifdef SHOW_TEXT
-    // Render text
-    if (show_text) {
-      gTextTexture.setText(MESSAGE, currentColor);
-      gTextTexture.render({ SCREEN_WIDTH / 15, 3 * SCREEN_HEIGHT / 4 });
-    }
-    gTextTexture2.setText("multiline text", textGreen);
-    gTextTexture2.render(SCREEN_WIDTH / 15, 7 * SCREEN_HEIGHT / 8.);
+    label.loadText("Single Line Text", textGreen);
+    label.render(5 * SCREEN_WIDTH / 7, SCREEN_HEIGHT / 8);
 #endif
 
     //Update screen
