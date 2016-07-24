@@ -19,6 +19,7 @@ public:
   bool loadText(std::string Text, SDL_Color textColor);
 };
 
+
 bool LTextTexture::loadFormat(std::string ttf_path, int size) {
   // Open the font .ttf file
   font = TTF_OpenFont(ttf_path.c_str(), size);

@@ -104,7 +104,7 @@ struct Map {
         }
       }
     }
-    std::cout << mouse_map.size() << std::endl;
+    std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   }
 
   Point mouse2basetile(const Point& mouse) {

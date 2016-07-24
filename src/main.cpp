@@ -26,8 +26,8 @@
 #define SHOW_TEXT
 //#define SHOW_BUTTONS
 
+// The buttons
 LButton gButtons[TOTAL_BUTTONS];
-TTF_Font *LazyFont, *GoodDogFont;
 
 using namespace std;
 
@@ -35,28 +35,30 @@ int main(int argc, char* args[]) {
   //Start up SDL and create window
   if (!init()) {
     printf("Failed to initialize!\n");
-    exit(-1);
+    exit(1);
   }
+
 
   //Initialize SDL_ttf 
   if (TTF_Init() == -1) {
     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
-    exit(-2);
+    exit(2);
   }
 
   //Load media
   if (!loadMedia(TILESET_PATH)) {
     printf("Failed to load media!\n"); 
-    exit(-3);
+  cin.get();
+    exit(3);
   }
+
 
   SDL_Color currentColor = textWhite;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
     printf("Failed to load text media!\n");
-    exit(-4);
+    exit(4);
   }
-  label.loadText("DIOCANE", textRed);
 
   // Event handler
   SDL_Event e;

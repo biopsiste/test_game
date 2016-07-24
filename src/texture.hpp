@@ -28,9 +28,23 @@
 #define TILESET_HIGHLIGHTER_TILE_INDEX   16
 #endif
 
-//Texture wrapper class
+// Global SDL object
+SDL_Renderer * gRenderer = NULL;
+SDL_Window* gWindow = NULL;
+
+
+
+////// Texture wrapper class
 class LTexture {
 public:
+  //The actual hardware texture
+  SDL_Texture* mTexture;
+  SDL_Renderer* mRenderer;
+
+  //Image dimensions
+  int mWidth;
+  int mHeight;
+
   //Initializes variables
   LTexture();
   //Deallocates memory
@@ -45,39 +59,9 @@ public:
   //Renders texture at given point
   void render(int x, int y, SDL_Rect* clip = NULL);
   void render(Point p, SDL_Rect* clip = NULL);
-
-  //Gets image dimensions
-  int getWidth();
-  int getHeight();
-
-  //The actual hardware texture
-  SDL_Texture* mTexture;
-
-  //Image dimensions
-  int mWidth;
-  int mHeight;
 };
 
-//Starts up SDL and creates window
-bool init();
-
-//Loads media
-bool loadMedia(std::string path);
-
-//Frees media and shuts down SDL
-void close();
-
-//The window we'll be rendering to
-SDL_Window* gWindow = NULL;
-
-//The window renderer
-SDL_Renderer* gRenderer = NULL;
-
-//Scene sprites
-SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
-LTexture gSpriteSheetTexture;
-
-LTexture::LTexture() {
+LTexture::LTexture(){
   //Initialize
   mTexture = NULL;
   mWidth = 0;
@@ -148,17 +132,17 @@ void LTexture::render(int x, int y, SDL_Rect* clip /* = NULL */ ) {
   //Render to screen
   SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
 }
-void LTexture::render(Point p, SDL_Rect* clip) {
+void LTexture::render(Point p, SDL_Rect* clip /* = NULL */ ) {
   render(p.x, p.y, clip);
 }
 
-int LTexture::getWidth() {
-  return mWidth;
-}
 
-int LTexture::getHeight() {
-  return mHeight;
-}
+
+//////// Global function (get rid of these!!!)
+
+//Scene sprites
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+LTexture gSpriteSheetTexture;
 
 bool init() {
   //Initialization flag
@@ -248,8 +232,9 @@ void close() {
   SDL_Quit();
 }
 
-///////////// useful render function
 
+
+///////////// useful render function
 void renderTile(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
   gSpriteSheetTexture.render(tile2screen(tile_index) - cam, tile);
 }
