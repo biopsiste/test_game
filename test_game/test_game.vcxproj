@@ -153,15 +153,15 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="Source.cpp" />
+    <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="animation.h" />
-    <ClInclude Include="battlemap.h" />
-    <ClInclude Include="buttons.h" />
-    <ClInclude Include="geometry.h" />
-    <ClInclude Include="textbox.h" />
-    <ClInclude Include="texture.h" />
+    <ClInclude Include="..\src\animation.h" />
+    <ClInclude Include="..\src\battlemap.h" />
+    <ClInclude Include="..\src\buttons.h" />
+    <ClInclude Include="..\src\geometry.h" />
+    <ClInclude Include="..\src\textbox.h" />
+    <ClInclude Include="..\src\texture.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
