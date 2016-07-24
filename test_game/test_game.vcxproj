@@ -156,18 +156,18 @@
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\animation.h" />
-    <ClInclude Include="..\src\battlemap.h" />
-    <ClInclude Include="..\src\buttons.h" />
-    <ClInclude Include="..\src\geometry.h" />
-    <ClInclude Include="..\src\textbox.h" />
-    <ClInclude Include="..\src\texture.h" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
     <Text Include="..\TODO.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\src\animation.hpp" />
+    <ClInclude Include="..\src\battlemap.hpp" />
+    <ClInclude Include="..\src\buttons.hpp" />
+    <ClInclude Include="..\src\geometry.hpp" />
+    <ClInclude Include="..\src\textbox.hpp" />
+    <ClInclude Include="..\src\texture.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

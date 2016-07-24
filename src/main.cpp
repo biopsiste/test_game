@@ -12,12 +12,12 @@
 #include <SDL_ttf.h> 
 
 // GOTYAY include
-#include "geometry.h"
-#include "texture.h"
-#include "buttons.h"
-#include "animation.h"
-#include "textbox.h"
-#include "battlemap.h"
+#include "geometry.hpp"
+#include "texture.hpp"
+#include "buttons.hpp"
+#include "animation.hpp"
+#include "textbox.hpp"
+#include "battlemap.hpp"
 
 // defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
