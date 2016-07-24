@@ -8,6 +8,7 @@ SDL_Color textRed = { 255,  0,  0 };
 SDL_Color textGreen = { 0,255,  0 };
 SDL_Color textBlue = { 0,  0,255 };
 
+// Single line TTF text texture
 class LTextTexture : public LTexture {
 public:
   TTF_Font *font;
@@ -19,7 +20,6 @@ public:
   // set text and color
   bool setText(std::string Text, SDL_Color textColor = textWhite);
 };
-
 
 bool LTextTexture::loadFormat(std::string ttf_path, int _size) {
   // Open the font .ttf file
@@ -66,7 +66,7 @@ bool LTextTexture::setText(std::string Text, SDL_Color textColor /*= textWhite*/
 
 
 
-//////// Multiline TextBox
+//////// Multiline TTF TextBox Texture
 class LMultiLineTextTexture {
 public:
   Point p;

@@ -57,7 +57,6 @@ public:
   void free();
 
   //Renders texture at given point
-  void render(int x, int y, SDL_Rect* clip = NULL);
   void render(Point p, SDL_Rect* clip = NULL);
 };
 
@@ -119,9 +118,9 @@ void LTexture::free() {
   }
 }
 
-void LTexture::render(int x, int y, SDL_Rect* clip /* = NULL */ ) {
+void LTexture::render(Point p, SDL_Rect* clip /* = NULL */ ) {
   //Set rendering space and render to screen
-  SDL_Rect renderQuad = { x, y, mWidth, mHeight };
+  SDL_Rect renderQuad = { p.x, p.y, mWidth, mHeight };
 
   //Set clip rendering dimensions
   if (clip != NULL) {
@@ -131,9 +130,6 @@ void LTexture::render(int x, int y, SDL_Rect* clip /* = NULL */ ) {
 
   //Render to screen
   SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
-}
-void LTexture::render(Point p, SDL_Rect* clip /* = NULL */ ) {
-  render(p.x, p.y, clip);
 }
 
 

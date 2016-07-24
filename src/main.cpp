@@ -222,7 +222,7 @@ menu color
 #ifdef SHOW_TEXT
     // Single Line
     label.setText("Single Line Text", textGreen);
-    label.render(5 * SCREEN_WIDTH / 7, SCREEN_HEIGHT / 8);
+    label.render(Point{ 5 * SCREEN_WIDTH / 7, SCREEN_HEIGHT / 8 });
 
     // Multiline
     if (show_menu) {

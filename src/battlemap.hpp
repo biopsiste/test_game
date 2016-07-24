@@ -1,5 +1,4 @@
 #pragma once
-//#include "texture.h"
 
 struct Cube {
   int altitude;                   //0: base level, 1: half-tile height, 2: full height
