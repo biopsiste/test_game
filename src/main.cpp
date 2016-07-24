@@ -22,7 +22,7 @@
 // defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
-#define SHOW_PATH
+//#define SHOW_PATH
 //#define SHOW_TEXT
 //#define SHOW_BUTTONS
 

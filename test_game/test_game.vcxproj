@@ -159,6 +159,7 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Text Include="..\resources\test_map.txt" />
     <Text Include="..\TODO.txt" />
   </ItemGroup>
   <ItemGroup>
@@ -168,6 +169,17 @@
     <ClInclude Include="..\src\geometry.hpp" />
     <ClInclude Include="..\src\textbox.hpp" />
     <ClInclude Include="..\src\texture.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\basic_ground_tiles_64_halftile.png" />
+    <Image Include="..\resources\iso-64x64-outside.png" />
+    <Image Include="..\resources\iso-64x64-outside_2.png" />
+    <Image Include="..\resources\iso-64x64-outside_numeri.png" />
+    <Image Include="..\resources\iso-64x64-outside_numeri2.png" />
+    <Image Include="..\resources\iso-64x64-outside_numeri_transp.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\resources\sample.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

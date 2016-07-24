@@ -1,31 +1,15 @@
 #pragma once
 //#include "texture.h"
 
-//class TileTower {
-//  int i, j;
-//  std::vector<SDL_Rect> content;
-//  int quota;
-//
-//  void render();
-//};
-
-//class TerrainMap {
-//  int w, h;
-//  std::vector< std::vector<TileTower>> tiles;
-//
-//  void render();
-//};
-
 struct Cube {
-  int altitude; //0: base level, 1: half-tile height, 2: full height
+  int altitude;                   //0: base level, 1: half-tile height, 2: full height
   int sprite_index;
   bool passable;
-  //bool empty;
   Point base_coords, flat_coords, screen_coords;
   int stack_index;
 
-  Cube() : altitude{}, sprite_index{}, passable(true)/*, empty(false)*/ {}
-  Cube(int _h, int _si, bool _pass) : altitude(_h), sprite_index(_si), passable(_pass)/*, empty(false)*/ {}
+  Cube() : altitude{}, sprite_index{}, passable(true) {}
+  Cube(int _h, int _si, bool _pass) : altitude(_h), sprite_index(_si), passable(_pass) {}
   Cube(int _stack_index, Point _base_coords, Point _flat_coords, Point _scr_coords, std::string entry) :
     stack_index(_stack_index), base_coords(_base_coords), flat_coords(_flat_coords), screen_coords(_scr_coords) {
     std::istringstream istr(entry);

@@ -26,6 +26,9 @@
     <Text Include="..\TODO.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="..\resources\test_map.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\animation.hpp">
@@ -46,5 +49,30 @@
     <ClInclude Include="..\src\texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\basic_ground_tiles_64_halftile.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\iso-64x64-outside.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\iso-64x64-outside_2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\iso-64x64-outside_numeri.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\iso-64x64-outside_numeri_transp.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="..\resources\iso-64x64-outside_numeri2.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="..\resources\sample.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
   </ItemGroup>
 </Project>
