@@ -25,7 +25,7 @@
 
 #define TILESET_UNIT_TILE_INDEX          47
 #define TILESET_CURSOR_TILE_INDEX        8
-#define TILESET_HIGHLIGHTER_TILE_INDEX   15
+#define TILESET_HIGHLIGHTER_TILE_INDEX   16
 #endif
 
 //Texture wrapper class

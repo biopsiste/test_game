@@ -37,6 +37,9 @@ struct Cube {
     //std::cout << sprite_index << " " << height << " " << passable << " " << empty << std::endl; system("pause");
   }
 
+  void render(const Point& cam) {
+    gSpriteSheetTexture.render(screen_coords - cam, &gSpriteClips[sprite_index]);
+  }
 
 };
 
@@ -62,7 +65,7 @@ struct CubeStack {
 
   void render(const Point& cam) {
     for(int i = 0; i < s.size(); ++i) {
-      gSpriteSheetTexture.render(s[i].screen_coords - cam, &gSpriteClips[s[i].sprite_index]);
+      s[i].render(cam);
     }
   }
 
@@ -78,6 +81,9 @@ struct Map {
 
   int w() { return m[0].size(); }
   int h() { return m.size(); }
+  bool is_in_map(const Point& p) {
+    return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
+  }
 
   Map(std::string filename) {
     std::ifstream ifi(filename);
@@ -117,10 +123,41 @@ struct Map {
     std::cout << mouse_map.size() << std::endl;
   }
 
+  Point mouse2basetile(const Point& mouse) {
+    if(mouse_map.count(mouse)) return mouse_map[mouse]->base_coords;
+    return { -999,-999 };
+  }
+
+  void renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
+      Point vert_offset{ 0, m[tile_index.x][tile_index.y].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET };
+      gSpriteSheetTexture.render(m[tile_index.x][tile_index.y].s.back().screen_coords - vert_offset - cam, tile);
+
+      //re-render cubes that should be in the foreground
+      for(int j = tile_index.y + 1; j < w(); ++j) {
+        if(is_in_map({ tile_index.x, j })) m[tile_index.x][j].render(cam);
+      }
+      for(int i = tile_index.x + 1; i < h(); ++i) {
+        for(int j = 0; j < w(); ++j) {
+          if(is_in_map({ i, j })) m[i][j].render(cam);
+        }
+      }
+  }
+
   void renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile) {    
     if(mouse_map.count(mouse + cam)) {
       Point vert_offset{ 0, mouse_map[mouse + cam]->altitude*TILE_GROUND_HEIGHT_OFFSET };
       gSpriteSheetTexture.render(mouse_map[mouse + cam]->screen_coords - vert_offset - cam, tile);
+
+      //re-render cubes that should be in the foreground
+      Point p = mouse_map[mouse + cam]->base_coords;
+      for(int j = p.y + 1; j < w(); ++j) {
+        if(is_in_map({ p.x, j })) m[p.x][j].render(cam);
+      }
+      for(int i = p.x + 1; i < h(); ++i) {
+        for(int j = 0; j < w(); ++j) {
+          if(is_in_map({ i, j })) m[i][j].render(cam);
+        }
+      }
     }
     //if(mouse_map.count(mouse)) std::cout << mouse_map[mouse]->base_coords << "   " << mouse_map[mouse]->flat_coords << std::endl;
   }
@@ -131,10 +168,6 @@ struct Map {
         m[i][j].render(cam);
       }
     }
-  }
-
-  bool is_in_map(const Point& p) {
-    return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
   }
 
   std::vector<Point> get_4neighbors(const Point& p) {

@@ -21,7 +21,8 @@
 
 // defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
-//#define SHOW_PATH
+
+#define SHOW_PATH
 //#define SHOW_TEXT
 //#define SHOW_BUTTONS
 
@@ -67,7 +68,7 @@ int main(int argc, char* args[]) {
   bool quit = false;
 
   Map map("../resources/test_map.txt");
-  Point mouse_tile, last_mouse_tile{ -100, -100 }, mouse_point;
+  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
   Point sprite_tile{ 1, 1 };
   Point camera{ 0, 0 }, north = tile2screen({ 0, 0 }), south = tile2screen({ map.w() - 1, map.h() - 1 }), west = tile2screen({ 0, map.h() - 1 }), east = tile2screen({ map.w() - 1 , 0 });
   //Point highl_tile{ 2, 2 };
@@ -169,14 +170,17 @@ int main(int argc, char* args[]) {
 
     //compute mouse tile and best path
     
-    mouse_tile = mouse2tile(mouse_point + camera);
+    //mouse_tile = mouse2tile(mouse_point + camera);
+    mouse_tile = map.mouse2basetile(mouse_point + camera);
     //auto mouse_tile_high = mouse2tile_high(mouse_point + camera);
     if (mouse_tile != last_mouse_tile) {
       //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
       //auto sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
       //cout << "su (" << su.x << "," << su.y << ") " << "sx (" << sx.x << "," << sx.y << ") " << "giu (" << giu.x << "," << giu.y << ") " << "dx (" << dx.x << "," << dx.y << ")" << endl;
       last_mouse_tile = mouse_tile;
-      //bestpath = map.findPath_Astar(sprite_tile, mouse_tile);
+#ifdef SHOW_PATH
+      bestpath = map.findPath_Astar(sprite_tile, mouse_tile);
+#endif
     }
 
     // Render ground 
@@ -199,7 +203,7 @@ int main(int argc, char* args[]) {
 
 #ifdef SHOW_PATH
     // render path
-    for (auto& p : bestpath) renderTile(camera, p, &highlighterSprite);
+    for (auto& p : bestpath) map.renderSprite(camera, p, &highlighterSprite);
 #endif
 
     // Render cursor
