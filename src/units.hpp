@@ -38,7 +38,7 @@ void Units::UpdateSprite() {
 }
 
 void Units::AddTimer() {
-  AnimationTimer = SDL_AddTimer(ANIMATION_DT_MS, user_event_cb, &unitSprite);     // callback every 1000 msec
+  AnimationTimer = SDL_AddTimer(ANIMATION_DT_MS, user_event_cb, NULL);
 }
 
 

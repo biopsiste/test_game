@@ -45,19 +45,19 @@ int main(int argc, char* args[]) {
     exit(2);
   }
 
-  //Load media
+  // Load sprite media
   if (!loadMedia(TILESET_PATH)) {
     printf("Failed to load media!\n"); 
     exit(3);
   }
-  
+
+  // Load text media  
   SDL_Color currentColor = textWhite;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
     printf("Failed to load text media!\n");
     exit(4);
   }
-
   LMultiLineTextTexture menuTextBox;
   if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
     printf("Failed to load text media!\n");
@@ -75,35 +75,31 @@ unit animation
 )";
     menuTextBox.setText(menuText);
 
-  // Event handler
+  // Event handler and variables
   SDL_Event e;
-
-  // General variables
-  int mouseX = 0, mouseY = 0;
   bool show_menu = true;
-  bool unit_animation = true;
+  bool unit_animation_on = true;
   bool quit = false; 
+  const unsigned char* currentKeyStates;
 
   // Level map object
   Map map("../resources/test_map.txt");
-//  vector<Point> bestpath;
 
   // Unit variables
   Units unit(Point{map.w()-1, 0});
   unit.AddTimer();
 
-  // Multipurpose points
+  // Multipurpose Point variables
   Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
   Point camera{ 0, 0 };
-
-  const unsigned char* currentKeyStates;
+  vector<Point> bestpath;
 
   // Set buttons position
   for (int i = 0; i < TOTAL_BUTTONS; ++i) {
     gButtons[i].setPosition(50 + i*BUTTON_WIDTH, 50);
   }
 
-  // MAIN LOOP
+  //// MAIN LOOP
   while (!quit) {
 
     // Handle events on queue
@@ -129,7 +125,7 @@ unit animation
           show_menu = (show_menu == true) ? false : true;
           break;
         case SDLK_a:                     // toggle animation on/off
-          unit_animation = (unit_animation == true) ? false : true;
+          unit_animation_on = (unit_animation_on == true) ? false : true;
           break;
         case SDLK_c:                     // change text color holding C
           currentColor = textRed;
@@ -165,13 +161,12 @@ unit animation
 
       // Get mouse position
       if (e.type == SDL_MOUSEMOTION) {
-        SDL_GetMouseState(&mouseX, &mouseY);
-        mouse_point = { mouseX, mouseY };
+        SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
       }
 
       // Timer callback points here
       if (e.type == SDL_USEREVENT) {
-        if( unit_animation )
+        if( unit_animation_on )
           unit.UpdateSprite();
       }
 
@@ -199,17 +194,18 @@ unit animation
 #endif
     }
 
+    // Render map
     map.render(camera);
 
 #ifdef SHOW_BUTTONS
-    //Render buttons 
+    // Render buttons 
     for (int i = 0; i < TOTAL_BUTTONS; ++i) {
       gButtons[i].render();
     }
 #endif
 
 #ifdef SHOW_PATH
-    // render path
+    // Render path
     for (auto& p : bestpath) map.renderSprite(camera, p, &highlighterSprite);
 #endif
 
