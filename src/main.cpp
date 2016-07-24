@@ -37,8 +37,7 @@ int main(int argc, char* args[]) {
     printf("Failed to initialize!\n");
     exit(1);
   }
-
-
+  
   //Initialize SDL_ttf 
   if (TTF_Init() == -1) {
     printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
@@ -48,11 +47,9 @@ int main(int argc, char* args[]) {
   //Load media
   if (!loadMedia(TILESET_PATH)) {
     printf("Failed to load media!\n"); 
-  cin.get();
     exit(3);
   }
-
-
+  
   SDL_Color currentColor = textWhite;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
@@ -60,12 +57,28 @@ int main(int argc, char* args[]) {
     exit(4);
   }
 
+  LMultiLineTextTexture menuTextBox;
+  if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
+    printf("Failed to load text media!\n");
+    exit(5);
+  }
+  std::string menuText = R"(MENU:
+1) 'X' to quit
+2) 'D' to toggle
+on/off this menu
+3) 'C' (hold) to change 
+menu color
+4) coming soon
+)";
+    menuTextBox.setText(menuText);
+
+
   // Event handler
   SDL_Event e;
 
   // General variables
   int mouseX = 0, mouseY = 0;
-  bool show_text = true;
+  bool show_menu = true;
   bool quit = false;
 
   Map map("../resources/test_map.txt");
@@ -111,7 +124,7 @@ int main(int argc, char* args[]) {
 
         switch (e.key.keysym.sym) {
         case SDLK_d:                     // hit D to hide/display text
-          show_text = (show_text == true) ? false : true;
+          show_menu = (show_menu == true) ? false : true;
           break;
         case SDLK_c:                     // change text color holding C
           currentColor = textRed;
@@ -130,7 +143,6 @@ int main(int argc, char* args[]) {
         case SDLK_RIGHT:
           camera.x += 10; if (camera.x + winW > east.x + 64 + 30) camera.x = east.x + 64 + 30 - winW;
           break;
-
         default:
           break;
         }
@@ -184,15 +196,6 @@ int main(int argc, char* args[]) {
 #endif
     }
 
-    // Render ground 
-    //for (int i = 0; i < MAP_W; i++) {
-    //  for (int j = 0; j < MAP_H; j++) {
-    //    SDL_Rect *currentSprite;
-    //    if (i < MAP_W / 2 && j < MAP_H / 2) currentSprite = &gSpriteClips[2];
-    //    else currentSprite = &gSpriteClips[15];
-    //    renderTile(camera, { i, j }, currentSprite);
-    //  }
-    //}
     map.render(camera);
 
 #ifdef SHOW_BUTTONS
@@ -217,8 +220,15 @@ int main(int argc, char* args[]) {
 
 
 #ifdef SHOW_TEXT
-    label.loadText("Single Line Text", textGreen);
+    // Single Line
+    label.setText("Single Line Text", textGreen);
     label.render(5 * SCREEN_WIDTH / 7, SCREEN_HEIGHT / 8);
+
+    // Multiline
+    if (show_menu) {
+      menuTextBox.setText(menuText, currentColor);
+      menuTextBox.render(Point{ 5 * SCREEN_WIDTH / 7, 2 * SCREEN_HEIGHT / 8 });
+    }
 #endif
 
     //Update screen
