@@ -3,6 +3,8 @@
 #define TTF_PATH_LAZY     "../resources/ttf_archive/Lazy.ttf"
 #define TTF_PATH_GOODDOG  "../resources/ttf_archive/GoodDog.ttf"
 
+#define LINE_SPACING_PX   10
+
 SDL_Color textWhite = { 255,255,255 };
 SDL_Color textRed = { 255,  0,  0 };
 SDL_Color textGreen = { 0,255,  0 };
@@ -115,7 +117,7 @@ void LMultiLineTextTexture::setText(std::string _text, SDL_Color color /* = text
 void LMultiLineTextTexture::render(Point p) {
   auto pivot = p;
   for (size_t i = 0; i < linesTexture.size(); i++) {
-    if ( i != 0 ) pivot += Point{ 0, linesTexture[i].mHeight };
+    if ( i != 0 ) pivot += Point{ 0, linesTexture[i].mHeight + LINE_SPACING_PX };
     linesTexture[i].render(pivot);
   }
 }

@@ -49,6 +49,9 @@
     <ClInclude Include="..\src\texture.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\units.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\basic_ground_tiles_64_halftile.png">
@@ -69,10 +72,5 @@
     <Image Include="..\resources\iso-64x64-outside_numeri2.png">
       <Filter>Resource Files</Filter>
     </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\resources\sample.ttf">
-      <Filter>Resource Files</Filter>
-    </Font>
   </ItemGroup>
 </Project>

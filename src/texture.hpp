@@ -28,10 +28,12 @@
 #define TILESET_HIGHLIGHTER_TILE_INDEX   16
 #endif
 
+#define UNIT_SPRITE_NUM                  4
+
+
 // Global SDL object
 SDL_Renderer * gRenderer = NULL;
 SDL_Window* gWindow = NULL;
-
 
 
 ////// Texture wrapper class
@@ -137,7 +139,7 @@ void LTexture::render(Point p, SDL_Rect* clip /* = NULL */ ) {
 //////// Global function (get rid of these!!!)
 
 //Scene sprites
-SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, unitSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
 LTexture gSpriteSheetTexture;
 
 bool init() {
@@ -206,7 +208,6 @@ bool loadMedia(std::string path) {
     cursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
     HighCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX-1];
     LowCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
-		unitSprite = gSpriteClips[TILESET_UNIT_TILE_INDEX];
 		highlighterSprite = gSpriteClips[TILESET_HIGHLIGHTER_TILE_INDEX];
 	}
 
@@ -234,8 +235,4 @@ void close() {
 void renderTile(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
   gSpriteSheetTexture.render(tile2screen(tile_index) - cam, tile);
 }
-
-//void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
-//  if (is_in_map(tile_index)) renderTile(cam, tile_index, tile);
-//}
 

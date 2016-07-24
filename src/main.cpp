@@ -18,6 +18,7 @@
 #include "animation.hpp"
 #include "textbox.hpp"
 #include "battlemap.hpp"
+#include "units.hpp"
 
 // defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
@@ -68,10 +69,11 @@ int main(int argc, char* args[]) {
 on/off this menu
 3) 'C' (hold) to change 
 menu color
-4) coming soon
+4) 'A' toggle on/off
+unit animation
+5) coming soon
 )";
     menuTextBox.setText(menuText);
-
 
   // Event handler
   SDL_Event e;
@@ -79,15 +81,20 @@ menu color
   // General variables
   int mouseX = 0, mouseY = 0;
   bool show_menu = true;
-  bool quit = false;
+  bool unit_animation = true;
+  bool quit = false; 
 
+  // Level map object
   Map map("../resources/test_map.txt");
-  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
-  Point sprite_tile{ 1, 1 };
-  Point camera{ 0, 0 }, north = tile2screen({ 0, 0 }), south = tile2screen({ map.w() - 1, map.h() - 1 }), west = tile2screen({ 0, map.h() - 1 }), east = tile2screen({ map.w() - 1 , 0 });
-  //Point highl_tile{ 2, 2 };
-  vector<Point> bestpath;
+//  vector<Point> bestpath;
 
+  // Unit variables
+  Units unit(Point{map.w()-1, 0});
+  unit.AddTimer();
+
+  // Multipurpose points
+  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
+  Point camera{ 0, 0 };
 
   const unsigned char* currentKeyStates;
 
@@ -95,11 +102,6 @@ menu color
   for (int i = 0; i < TOTAL_BUTTONS; ++i) {
     gButtons[i].setPosition(50 + i*BUTTON_WIDTH, 50);
   }
-
-
-  // register a timer
-  //SDL_TimerID sprite_move_timer = SDL_AddTimer(1000, move_timer_cb, &sprite_tile); //call callback every 1000 msec
-
 
   // MAIN LOOP
   while (!quit) {
@@ -126,22 +128,25 @@ menu color
         case SDLK_d:                     // hit D to hide/display text
           show_menu = (show_menu == true) ? false : true;
           break;
+        case SDLK_a:                     // toggle animation on/off
+          unit_animation = (unit_animation == true) ? false : true;
+          break;
         case SDLK_c:                     // change text color holding C
           currentColor = textRed;
           break;
 
-          // move camera
+        // move camera
         case SDLK_DOWN:
-          camera.y += 10; if (camera.y + winH > south.y + 64 + 30) camera.y = south.y + 64 + 30 - winH;
+          camera.y += 10; if (camera.y + winH > map.south.y + 64 + 30) camera.y = map.south.y + 64 + 30 - winH;
           break;
         case SDLK_UP:
-          camera.y -= 10; if (camera.y < north.y - 30) camera.y = north.y - 30;
+          camera.y -= 10; if (camera.y < map.north.y - 30) camera.y = map.north.y - 30;
           break;
         case SDLK_LEFT:
-          camera.x -= 10; if (camera.x < west.x - 30) camera.x = west.x - 30;
+          camera.x -= 10; if (camera.x < map.west.x - 30) camera.x = map.west.x - 30;
           break;
         case SDLK_RIGHT:
-          camera.x += 10; if (camera.x + winW > east.x + 64 + 30) camera.x = east.x + 64 + 30 - winW;
+          camera.x += 10; if (camera.x + winW > map.east.x + 64 + 30) camera.x = map.east.x + 64 + 30 - winW;
           break;
         default:
           break;
@@ -164,11 +169,10 @@ menu color
         mouse_point = { mouseX, mouseY };
       }
 
-      // move sprite, commented
-      if (e.type == SDL_USEREVENT) {    // timer callback points here
-        //insert new coords here, example:
-        //sprite_tile.x++;
-        //sprite_tile.y++;
+      // Timer callback points here
+      if (e.type == SDL_USEREVENT) {
+        if( unit_animation )
+          unit.UpdateSprite();
       }
 
       // Handle button events 
@@ -182,7 +186,6 @@ menu color
     SDL_RenderClear(gRenderer);
 
     //compute mouse tile and best path
-    
     //mouse_tile = mouse2tile(mouse_point + camera);
     mouse_tile = map.mouse2basetile(mouse_point + camera);
     //auto mouse_tile_high = mouse2tile_high(mouse_point + camera);
@@ -210,14 +213,11 @@ menu color
     for (auto& p : bestpath) map.renderSprite(camera, p, &highlighterSprite);
 #endif
 
+    // Render unit
+    unit.render(map, camera);
+
     // Render cursor
     map.renderCursor(camera, mouse_point, &LowCursorSprite);
-    //renderCursor(camera, mouse_tile, &LowCursorSprite);
-    //renderCursor(camera, mouse_tile_high, &HighCursorSprite);
-
-    // Render unit
-    renderTile(camera, sprite_tile, &unitSprite);
-
 
 #ifdef SHOW_TEXT
     // Single Line

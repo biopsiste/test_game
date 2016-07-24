@@ -169,6 +169,7 @@
     <ClInclude Include="..\src\geometry.hpp" />
     <ClInclude Include="..\src\textbox.hpp" />
     <ClInclude Include="..\src\texture.hpp" />
+    <ClInclude Include="..\src\units.hpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\basic_ground_tiles_64_halftile.png" />
@@ -177,9 +178,6 @@
     <Image Include="..\resources\iso-64x64-outside_numeri.png" />
     <Image Include="..\resources\iso-64x64-outside_numeri2.png" />
     <Image Include="..\resources\iso-64x64-outside_numeri_transp.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Font Include="..\resources\sample.ttf" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

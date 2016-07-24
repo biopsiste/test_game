@@ -1,6 +1,8 @@
 #pragma once
 
-unsigned int move_timer_cb(unsigned int interval, void *param) {
+#define ANIMATION_DT_MS         500   
+
+unsigned int user_event_cb(unsigned int interval, void *param) {
   SDL_Event event;
   SDL_UserEvent userevent;
 
