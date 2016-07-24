@@ -24,7 +24,7 @@
 #define TILESET_TILES                    56
 
 #define TILESET_UNIT_TILE_INDEX          47
-#define TILESET_CURSOR_TILE_INDEX        7
+#define TILESET_CURSOR_TILE_INDEX        8
 #define TILESET_HIGHLIGHTER_TILE_INDEX   15
 #endif
 
@@ -310,91 +310,7 @@ void renderTile(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
   gSpriteSheetTexture.render(tile2screen(tile_index) - cam, tile);
 }
 
-void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
-  if (is_in_map(tile_index)) renderTile(cam, tile_index, tile);
-}
+//void renderCursor(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
+//  if (is_in_map(tile_index)) renderTile(cam, tile_index, tile);
+//}
 
-struct Cube {
-  int altitude; //0: base level, 1: half-tile height, 2: full height
-  int sprite_index;
-  bool passable;
-  //bool empty;
-  Point coords;
-
-  Cube() : altitude{}, sprite_index{}, passable(true)/*, empty(false)*/ {}
-  Cube(int _h, int _si, bool _pass) : altitude(_h), sprite_index(_si), passable(_pass)/*, empty(false)*/ {}
-  Cube(Point _coords, std::string entry) : coords(_coords) {
-    std::istringstream istr(entry);
-    std::string token;
-    std::getline(istr, token, ','); sprite_index = std::stoi(token);
-    std::getline(istr, token, ','); altitude = std::stoi(token);
-    std::getline(istr, token, ','); passable = std::stoi(token);
-    //std::getline(istr, token, ','); empty = std::stoi(token);
-    //std::cout << sprite_index << " " << height << " " << passable << " " << empty << std::endl; system("pause");
-  }
-};
-
-struct CubeStack {
-  std::vector<Cube> s;
-  Point coords;
-
-  CubeStack() {}
-  CubeStack(Point _coords, std::string stackentry) : coords(_coords) {
-    std::istringstream istr(stackentry);
-    std::string token;
-    while(std::getline(istr, token, '|')) {
-      //std::cout << token << std::endl; //system("pause");
-      s.emplace_back(_coords, token);
-    }
-    //std::cout << "---" << std::endl; system("pause");
-  }
-
-  void render(const Point& cam) {
-    for(int i = 0; i < s.size(); ++i) {
-      gSpriteSheetTexture.render(tile2screen(coords) - Point{ 0, i*int(TILE_H) / 2 } - cam, &gSpriteClips[s[i].sprite_index]);
-    }
-  }
-};
-
-struct Map {
-  //std::vector<MapLayer> m;
-  std::vector<std::vector<CubeStack>> m;
-
-  Map(std::string filename) {
-    std::ifstream ifi(filename);
-    std::string line, stackentry; int w, h;
-    std::getline(ifi, line); //ignore header
-    ifi >> w >> h; //std::cout << w << " " << h << std::endl;
-    std::getline(ifi, line); //ignore w h
-    m.assign(w, std::vector<CubeStack>(h));
-    int i = 0;
-    while(std::getline(ifi, line)) {
-      //std::cout << line << std::endl; system("pause");
-      std::istringstream istr(line);
-      int j = 0;
-      while(istr >> stackentry) {
-        //std::cout << stackentry << std::endl;
-        //std::cout << i << " " << j << std::endl;
-        m[i][j] = CubeStack({i,j}, stackentry);
-        j++;
-      }
-      i++;
-    }
-  }
-
-  void render(const Point& cam) {
-    for(int i = 0; i < m.size(); i++) {
-      for(int j = 0; j < m[0].size(); j++) {
-        m[i][j].render(cam);
-      }
-    }
-  }
-};
-
-// not working for now
-void smart_renderCursor(const Map& map, const Point& cam, const Point& tile_index, SDL_Rect *sprite) {
-  if(is_in_map(tile_index)) {
-    int alt_offset = map.m[tile_index.x][tile_index.x].s[0].altitude * int(TILE_H) / 2;
-    gSpriteSheetTexture.render(tile2screen(tile_index) + Point{0, -alt_offset} - cam, sprite);
-  }
-}

@@ -66,13 +66,12 @@ int main(int argc, char* args[]) {
   bool show_text = true;
   bool quit = false;
 
-  Point mouse_tile, last_mouse_tile{ -100, -100 };
+  Map map("../resources/test_map.txt");
+  Point mouse_tile, last_mouse_tile{ -100, -100 }, mouse_point;
   Point sprite_tile{ 1, 1 };
-  Point camera{ 0, 0 }, north = tile2screen({ 0, 0 }), south = tile2screen({ MAP_W - 1, MAP_H - 1 }), west = tile2screen({ 0, MAP_H - 1 }), east = tile2screen({ MAP_W - 1 , 0 });
-  //sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
+  Point camera{ 0, 0 }, north = tile2screen({ 0, 0 }), south = tile2screen({ map.w() - 1, map.h() - 1 }), west = tile2screen({ 0, map.h() - 1 }), east = tile2screen({ map.w() - 1 , 0 });
   //Point highl_tile{ 2, 2 };
   vector<Point> bestpath;
-  Map map("../resources/test_map.txt");
 
 
   const unsigned char* currentKeyStates;
@@ -148,6 +147,7 @@ int main(int argc, char* args[]) {
       // Get mouse position
       if (e.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&mouseX, &mouseY);
+        mouse_point = { mouseX, mouseY };
       }
 
       // move sprite, commented
@@ -168,14 +168,15 @@ int main(int argc, char* args[]) {
     SDL_RenderClear(gRenderer);
 
     //compute mouse tile and best path
-    mouse_tile = mouse2tile({ mouseX + camera.x, mouseY + camera.y });
-    auto mouse_tile_high = mouse2tile_high({ mouseX + camera.x, mouseY + camera.y });
+    
+    mouse_tile = mouse2tile(mouse_point + camera);
+    //auto mouse_tile_high = mouse2tile_high(mouse_point + camera);
     if (mouse_tile != last_mouse_tile) {
       //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
       //auto sx = tile2screen({ 0, MAP_H - 1 }), dx = tile2screen({ MAP_W - 1 , 0 }), su = tile2screen({ 0, 0 }), giu = tile2screen({ MAP_W - 1, MAP_H - 1 });
       //cout << "su (" << su.x << "," << su.y << ") " << "sx (" << sx.x << "," << sx.y << ") " << "giu (" << giu.x << "," << giu.y << ") " << "dx (" << dx.x << "," << dx.y << ")" << endl;
       last_mouse_tile = mouse_tile;
-      bestpath = findPath_Astar(sprite_tile, mouse_tile);
+      //bestpath = map.findPath_Astar(sprite_tile, mouse_tile);
     }
 
     // Render ground 
@@ -202,9 +203,9 @@ int main(int argc, char* args[]) {
 #endif
 
     // Render cursor
+    map.renderCursor(camera, mouse_point, &LowCursorSprite);
     //renderCursor(camera, mouse_tile, &LowCursorSprite);
-    renderCursor(camera, mouse_tile_high, &HighCursorSprite);
-    //smart_renderCursor(map, camera, mouse_tile, &LowCursorSprite);
+    //renderCursor(camera, mouse_tile_high, &HighCursorSprite);
 
     // Render unit
     renderTile(camera, sprite_tile, &unitSprite);
