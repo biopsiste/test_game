@@ -156,6 +156,7 @@
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\resources\units\test.unit.json" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

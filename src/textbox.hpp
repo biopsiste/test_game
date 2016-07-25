@@ -105,8 +105,6 @@ void LMultiLineTextTexture::setText(std::string _text, SDL_Color color /* = text
   lines.resize(0);
   while (std::getline(s, line)) lines.push_back(line);
 
-  for (auto s : lines) std::cout << s << std::endl;
-
   linesTexture.resize(lines.size());
   for (size_t i = 0; i < linesTexture.size(); i++) {
     linesTexture[i].setFormat(font, size);

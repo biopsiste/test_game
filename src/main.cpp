@@ -1,5 +1,7 @@
 // Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 
+#define _CRT_SECURE_NO_WARNINGS
+
 // STL include
 #include <iostream>
 #include <cstdio>
@@ -33,24 +35,29 @@
 // The buttons
 LButton gButtons[TOTAL_BUTTONS];
 
+// MSVC Debug Helper
+#ifdef _MSC_VER
+#define CLI_PAUSE           std::cout << "\nENTER to quit..."; std::cin.get();
+#endif
+
 using namespace std;
 
 int main(int argc, char* args[]) {
   //Start up SDL and create window
   if (!init()) {
-    printf("Failed to initialize!\n");
+    printf("Failed to initialize!\n"); CLI_PAUSE
     exit(1);
   }
   
   //Initialize SDL_ttf 
   if (TTF_Init() == -1) {
-    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError());
+    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError()); CLI_PAUSE
     exit(2);
   }
 
   // Load sprite media
   if (!loadMedia(TILESET_PATH)) {
-    printf("Failed to load media!\n"); 
+    printf("Failed to load media!\n"); CLI_PAUSE
     exit(3);
   }
 
@@ -58,12 +65,12 @@ int main(int argc, char* args[]) {
   SDL_Color currentColor = textWhite;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
-    printf("Failed to load text media!\n");
+    printf("Failed to load text media!\n"); CLI_PAUSE
     exit(4);
   }
   LMultiLineTextTexture menuTextBox;
   if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
-    printf("Failed to load text media!\n");
+    printf("Failed to load text media!\n"); CLI_PAUSE
     exit(5);
   }
   std::string menuText = R"(MENU:
@@ -76,7 +83,7 @@ menu color
 unit animation
 5) coming soon
 )";
-    menuTextBox.setText(menuText);
+  menuTextBox.setText(menuText);
 
   // Event handler and variables
   SDL_Event e;
@@ -89,7 +96,14 @@ unit animation
   Map map("../resources/test_map.txt");
 
   // Unit variables
-  Units unit(Point{map.w()-1, 0});
+  Units unit;
+  try {
+    unit = Units("../resources/units/test.unit.json");
+  }
+  catch (std::exception &e) {
+    std::cout << "ERROR: " << e.what() << std::endl; CLI_PAUSE
+      exit(21);
+  }
   unit.AddTimer();
 
   // Multipurpose Point variables

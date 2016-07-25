@@ -4,7 +4,6 @@ class Units {
 public:
   Point Tile;
   size_t TickCounter;
-  int SpriteAltitude;
   SDL_Rect CurrentSprite;
   std::vector<int> ClipsIndices;
 
@@ -12,7 +11,9 @@ public:
   SDL_TimerID AnimationTimer;
 
   // Constructor
+  Units() {};
   Units(const Point &p);
+  Units(std::string json_path);
 
   // Methods
   void AddTimer();
@@ -26,7 +27,22 @@ Units::Units(const Point &p){
 
   // modify to parse a json encoding unit properties
   ClipsIndices = { 40, 44, 42, 46 };
-  SpriteAltitude = 1;
+}
+
+Units::Units(std::string json_path) {
+  jsoncons::json junit = jsoncons::json::parse_file(json_path);
+
+  Tile = Point{ junit.has_member("tile") ? junit["tile"][0].as<int>() : 0, 
+    junit.has_member("tile") ? junit["tile"][1].as<int>() : 0 };
+  TickCounter = 0;
+  if (junit.has_member("clips_indices") && junit["clips_indices"].is_array() ) {
+    jsoncons::json jtemp = junit["clips_indices"];
+    for (size_t i = 0; i < jtemp.size(); i++) {
+      ClipsIndices.push_back(jtemp[i].as<int>());
+    }
+  }
+  else
+    ClipsIndices.push_back(0);
 }
 
 void Units::render(Map &map, const Point &cam) {
@@ -40,5 +56,4 @@ void Units::UpdateSprite() {
 void Units::AddTimer() {
   AnimationTimer = SDL_AddTimer(ANIMATION_DT_MS, user_event_cb, NULL);
 }
-
 
