@@ -86,13 +86,6 @@ Point mouse2tile_high(const Point& mouse) {
   return Point{ I, J };
 }
 
-//inline bool is_in_map(const int& px, const int& py) {
-//	return px >= 0 && px < MAP_W && py >= 0 && py < MAP_H;
-//}
-//inline bool is_in_map(const Point& p) {
-//	return is_in_map(p.x, p.y);
-//}
-
 inline bool are_4neighbors(const Point& a, const Point& b) {
 	return (a.x == b.x && abs(a.y - b.y) == 1) || (a.y == b.y && abs(a.x - b.x) == 1);
 }

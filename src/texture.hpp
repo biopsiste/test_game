@@ -59,7 +59,7 @@ public:
   void free();
 
   //Renders texture at given point
-  void render(Point p, SDL_Rect* clip = NULL);
+  void render(const Point &p, SDL_Rect* clip = NULL);
 };
 
 LTexture::LTexture(){
@@ -120,7 +120,7 @@ void LTexture::free() {
   }
 }
 
-void LTexture::render(Point p, SDL_Rect* clip /* = NULL */ ) {
+void LTexture::render(const Point &p, SDL_Rect* clip /* = NULL */ ) {
   //Set rendering space and render to screen
   SDL_Rect renderQuad = { p.x, p.y, mWidth, mHeight };
 
