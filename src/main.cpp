@@ -11,6 +11,9 @@
 #include <SDL_image.h>
 #include <SDL_ttf.h> 
 
+// Jsoncons
+#include "jsoncons/json.hpp"
+
 // GOTYAY include
 #include "geometry.hpp"
 #include "texture.hpp"
