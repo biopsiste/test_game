@@ -86,7 +86,7 @@ struct Map {
   int w() { return m[0].size(); }
   int h() { return m.size(); }
   bool is_in_map(const Point& p) {
-    return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
+    return p.x >= 0 && p.x < h() && p.y >= 0 && p.y < w();
   }
 
   // Geometry
@@ -121,9 +121,9 @@ Map::Map(std::string filename) {
   std::ifstream ifi(filename);
   std::string line, stackentry; int w, h;
   std::getline(ifi, line); //ignore header
-  ifi >> w >> h; //std::cout << w << " " << h << std::endl;
+  ifi >> h >> w; //std::cout << w << " " << h << std::endl;
   std::getline(ifi, line); //ignore w h
-  m.assign(w, std::vector<CubeStack>(h));
+  m.assign(h, std::vector<CubeStack>(w));
   int i = 0;
   while (std::getline(ifi, line)) {
     //std::cout << line << std::endl; system("pause");
@@ -155,8 +155,8 @@ Map::Map(std::string filename) {
   std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   north = tile2screen(Point{ 0, 0 });
   south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
-  west = tile2screen(Point{ 0,this->h() - 1 });
-  east = tile2screen(Point{ this->w() - 1 , 0 });
+  west = tile2screen(Point{ 0,this->w() - 1 });
+  east = tile2screen(Point{ this->h() - 1 , 0 });
 
 }
 
