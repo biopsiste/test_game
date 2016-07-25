@@ -154,7 +154,7 @@ Map::Map(std::string filename) {
   }
   std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   north = tile2screen(Point{ 0, 0 });
-  south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
+  south = tile2screen(Point{ this->h() - 1, this->w() - 1 });
   west = tile2screen(Point{ 0,this->w() - 1 });
   east = tile2screen(Point{ this->h() - 1 , 0 });
 
