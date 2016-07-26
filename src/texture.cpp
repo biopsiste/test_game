@@ -1,66 +1,11 @@
 #pragma once
-#include <fstream>
-#include <sstream>
+#include "texture.h"
+#include <SDL_image.h>
 
-#define USE_TILESET                      2
-
-#if USE_TILESET == 1
-//tileset 1
-#define TILESET_PATH                     "../resources/iso-64x64-outside_numeri_transp.png"
-
-#define TILESET_COLUMNS                  10
-#define TILESET_ROWS                     16
-#define TILESET_TILES                    160
-
-#define TILESET_UNIT_TILE_INDEX          119
-#define TILESET_CURSOR_TILE_INDEX        159
-#define TILESET_HIGHLIGHTER_TILE_INDEX   44
-#elif USE_TILESET == 2
-//tileset 2
-#define TILESET_PATH                     "../resources/basic_ground_tiles_64_halftile.png"
-
-#define TILESET_COLUMNS                  8
-#define TILESET_ROWS                     7
-#define TILESET_TILES                    56
-
-#define TILESET_UNIT_TILE_INDEX          47
-#define TILESET_CURSOR_TILE_INDEX        8
-#define TILESET_HIGHLIGHTER_TILE_INDEX   16
-#endif
-
-#define UNIT_SPRITE_NUM                  4
-
-
-// Global SDL object
-SDL_Renderer * gRenderer = NULL;
-SDL_Window* gWindow = NULL;
-
-
-////// Texture wrapper class
-class LTexture {
-public:
-  //The actual hardware texture
-  SDL_Texture* mTexture;
-  SDL_Renderer* mRenderer;
-
-  //Image dimensions
-  int mWidth;
-  int mHeight;
-
-  //Initializes variables
-  LTexture();
-  //Deallocates memory
-  ~LTexture();
-
-  // Loads image at specified path
-  bool loadFromFile(std::string path);
-
-  //Deallocates texture
-  void free();
-
-  //Renders texture at given point
-  void render(const Point &p, SDL_Rect* clip = NULL);
-};
+extern SDL_Renderer *gRenderer;
+extern SDL_Window *gWindow;
+extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+extern LTexture gSpriteSheetTexture;
 
 LTexture::LTexture(){
   //Initialize
@@ -134,13 +79,6 @@ void LTexture::render(const Point &p, SDL_Rect* clip /* = NULL */ ) {
   SDL_RenderCopy(gRenderer, mTexture, clip, &renderQuad);
 }
 
-
-
-//////// Global function (get rid of these!!!)
-
-//Scene sprites
-SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
-LTexture gSpriteSheetTexture;
 
 bool init() {
   //Initialization flag

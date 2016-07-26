@@ -1,27 +1,9 @@
 #pragma once
+#include <sstream>
 
-#define TTF_PATH_LAZY     "../resources/ttf_archive/Lazy.ttf"
-#define TTF_PATH_GOODDOG  "../resources/ttf_archive/GoodDog.ttf"
+#include "textbox.h"
 
-#define LINE_SPACING_PX   10
-
-SDL_Color textWhite = { 255,255,255 };
-SDL_Color textRed = { 255,  0,  0 };
-SDL_Color textGreen = { 0,255,  0 };
-SDL_Color textBlue = { 0,  0,255 };
-
-// Single line TTF text texture
-class LTextTexture : public LTexture {
-public:
-  TTF_Font *font;
-  int size;
-
-  // Load font from .ttf file
-  bool loadFormat(std::string ttf_path, int size);
-  void setFormat(TTF_Font * _font, int size);
-  // set text and color
-  bool setText(std::string Text, SDL_Color textColor = textWhite);
-};
+extern SDL_Renderer *gRenderer;
 
 bool LTextTexture::loadFormat(std::string ttf_path, int _size) {
   // Open the font .ttf file
@@ -66,26 +48,6 @@ bool LTextTexture::setText(std::string Text, SDL_Color textColor /*= textWhite*/
   return mTexture != NULL;
 }
 
-
-
-//////// Multiline TTF TextBox Texture
-class LMultiLineTextTexture {
-public:
-  Point p;
-  TTF_Font *font;
-  int size;
-  std::string text;
-  std::vector<std::string> lines;
-  std::vector<LTextTexture> linesTexture;
-
-  // Load format from file
-  bool loadFormat(std::string ttf_path, int _size);
-  // Set multitext line, line break char is '\n'
-  void setText(std::string _text, SDL_Color color = textWhite);
-
-  // Display text
-  void render(Point p);
-};
 
 bool LMultiLineTextTexture::loadFormat(std::string ttf_path, int _size) {
   // Open the font .ttf file

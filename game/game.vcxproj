@@ -122,10 +122,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\src\animation.hpp" />
-    <ClInclude Include="..\src\battlemap.hpp" />
-    <ClInclude Include="..\src\buttons.hpp" />
-    <ClInclude Include="..\src\geometry.hpp" />
+    <ClCompile Include="..\src\animation.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="..\src\animation.h" />
+    <ClInclude Include="..\src\battlemap.h" />
+    <ClCompile Include="..\src\battlemap.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="..\src\buttons.h" />
+    <ClCompile Include="..\src\buttons.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="..\src\geometry.h" />
+    <ClCompile Include="..\src\geometry.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
     <ClInclude Include="..\src\jsoncons\json.hpp" />
     <ClInclude Include="..\src\jsoncons\json1.hpp" />
     <ClInclude Include="..\src\jsoncons\json2.hpp" />
@@ -145,9 +157,18 @@
     <ClInclude Include="..\src\jsoncons\json_type_traits.hpp" />
     <ClInclude Include="..\src\jsoncons\output_format.hpp" />
     <ClInclude Include="..\src\jsoncons\parse_error_handler.hpp" />
-    <ClInclude Include="..\src\textbox.hpp" />
-    <ClInclude Include="..\src\texture.hpp" />
-    <ClInclude Include="..\src\units.hpp" />
+    <ClInclude Include="..\src\textbox.h" />
+    <ClCompile Include="..\src\textbox.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="..\src\texture.h" />
+    <ClCompile Include="..\src\texture.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClCompile Include="..\src\units.cpp">
+      <FileType>CppHeader</FileType>
+    </ClCompile>
+    <ClInclude Include="..\src\units.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />

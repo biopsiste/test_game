@@ -1,6 +1,7 @@
 #pragma once
+#include <SDL.h>
 
-#define ANIMATION_DT_MS         500   
+#include "animation.h"
 
 unsigned int user_event_cb(unsigned int interval, void *param) {
   SDL_Event event;

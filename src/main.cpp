@@ -1,12 +1,10 @@
 // Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 
-#define _CRT_SECURE_NO_WARNINGS
-
 // STL include
 #include <iostream>
-#include <cstdio>
-#include <string>
-#include <vector>
+//#include <cstdio>
+//#include <string>
+//#include <vector>
 
 // SDL include
 #include <SDL.h>
@@ -14,16 +12,16 @@
 #include <SDL_ttf.h> 
 
 // Jsoncons
-#include "jsoncons/json.hpp"
+//#include "jsoncons/json.hpp"
 
 // GOTYAY include
-#include "geometry.hpp"
-#include "texture.hpp"
-#include "buttons.hpp"
-#include "animation.hpp"
-#include "textbox.hpp"
-#include "battlemap.hpp"
-#include "units.hpp"
+#include "geometry.h"
+#include "texture.h"
+#include "buttons.h"
+#include "animation.h"
+#include "textbox.h"
+#include "battlemap.h"
+#include "units.h"
 
 // defines (to be moved or removed)
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
@@ -41,6 +39,13 @@ LButton gButtons[TOTAL_BUTTONS];
 #endif
 
 using namespace std;
+
+// Global SDL object
+SDL_Renderer *gRenderer = NULL;
+SDL_Window *gWindow = NULL;
+//Scene sprites
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+LTexture gSpriteSheetTexture;
 
 int main(int argc, char* args[]) {
   //Start up SDL and create window
@@ -62,7 +67,7 @@ int main(int argc, char* args[]) {
   }
 
   // Load text media  
-  SDL_Color currentColor = textWhite;
+  SDL_Color currentColor = SDL_WHITE;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
     printf("Failed to load text media!\n"); CLI_PAUSE
@@ -145,7 +150,7 @@ unit animation
           unit_animation_on = (unit_animation_on == true) ? false : true;
           break;
         case SDLK_c:                     // change text color holding C
-          currentColor = textRed;
+          currentColor = SDL_RED;
           break;
 
         // move camera
@@ -169,7 +174,7 @@ unit animation
       if (e.type == SDL_KEYUP) {
         switch (e.key.keysym.sym) {
         case SDLK_c:                     // change text color holding C
-          currentColor = textWhite;
+          currentColor = SDL_WHITE;
           break;
         default:
           break;
@@ -234,7 +239,7 @@ unit animation
 
 #ifdef SHOW_TEXT
     // Single Line
-    label.setText("Single Line Text", textGreen);
+    label.setText("Single Line Text", SDL_GREEN);
     label.render(Point{ 5 * SCREEN_WIDTH / 7, SCREEN_HEIGHT / 8 });
 
     // Multiline
