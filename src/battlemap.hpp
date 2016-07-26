@@ -83,10 +83,10 @@ struct Map {
   Map(std::string filename);
 
   // Utilities
-  int w() { return m[0].size(); }
-  int h() { return m.size(); }
+  int w() { return m.size(); }
+  int h() { return m[0].size(); }
   bool is_in_map(const Point& p) {
-    return p.x >= 0 && p.x < h() && p.y >= 0 && p.y < w();
+    return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
   }
 
   // Geometry
@@ -121,9 +121,9 @@ Map::Map(std::string filename) {
   std::ifstream ifi(filename);
   std::string line, stackentry; int w, h;
   std::getline(ifi, line); //ignore header
-  ifi >> h >> w; //std::cout << w << " " << h << std::endl;
+  ifi >> w >> h; //std::cout << w << " " << h << std::endl;
   std::getline(ifi, line); //ignore w h
-  m.assign(h, std::vector<CubeStack>(w));
+  m.assign(w, std::vector<CubeStack>(h));
   int i = 0;
   while (std::getline(ifi, line)) {
     //std::cout << line << std::endl; system("pause");
@@ -139,24 +139,25 @@ Map::Map(std::string filename) {
   }
 
   //build mouse_map
-  for (int i = 0; i < h; i++) {
-    for (int j = 0; j < w; j++) {
+  for (int i = 0; i < w; i++) {
+    for (int j = 0; j < h; j++) {
       auto upper_left = m[i][j].s.back().screen_coords;
-      for (int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
-        for (int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
+      for(int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
+        for(int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
           int y = int(yy - TILE_H / 2. + m[i][j].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET);
-          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if (dI > 0) dI--; auto I = lrint(dI);
+          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if(dI > 0) dI--; auto I = lrint(dI);
           double dJ = -(xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); auto J = lrint(dJ);
-          if (m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
+          if(m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
+          else if(yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
         }
       }
     }
   }
   std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   north = tile2screen(Point{ 0, 0 });
-  south = tile2screen(Point{ this->h() - 1, this->w() - 1 });
-  west = tile2screen(Point{ 0,this->w() - 1 });
-  east = tile2screen(Point{ this->h() - 1 , 0 });
+  south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
+  west = tile2screen(Point{ 0,this->h() - 1 });
+  east = tile2screen(Point{ this->w() - 1 , 0 });
 
 }
 
@@ -170,11 +171,11 @@ void Map::renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * til
   gSpriteSheetTexture.render(m[tile_index.x][tile_index.y].s.back().screen_coords - vert_offset - cam, tile);
 
   //re-render cubes that should be in the foreground
-  for (int j = tile_index.y + 1; j < w(); ++j) {
+  for (int j = tile_index.y + 1; j < h(); ++j) {
     if (is_in_map({ tile_index.x, j })) m[tile_index.x][j].render(cam);
   }
-  for (int i = tile_index.x + 1; i < h(); ++i) {
-    for (int j = 0; j < w(); ++j) {
+  for (int i = tile_index.x + 1; i < w(); ++i) {
+    for (int j = 0; j < h(); ++j) {
       if (is_in_map({ i, j })) m[i][j].render(cam);
     }
   }
@@ -187,11 +188,11 @@ void Map::renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile) {
 
     //re-render cubes that should be in the foreground
     Point p = mouse_map[mouse + cam]->base_coords;
-    for (int j = p.y + 1; j < w(); ++j) {
+    for (int j = p.y + 1; j < h(); ++j) {
       if (is_in_map({ p.x, j })) m[p.x][j].render(cam);
     }
-    for (int i = p.x + 1; i < h(); ++i) {
-      for (int j = 0; j < w(); ++j) {
+    for (int i = p.x + 1; i < w(); ++i) {
+      for (int j = 0; j < h(); ++j) {
         if (is_in_map({ i, j })) m[i][j].render(cam);
       }
     }
@@ -200,8 +201,8 @@ void Map::renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile) {
 }
 
 void Map::render(const Point& cam) {
-  for (int i = 0; i < h(); i++) {
-    for (int j = 0; j < w(); j++) {
+  for (int i = 0; i < w(); i++) {
+    for (int j = 0; j < h(); j++) {
       m[i][j].render(cam);
     }
   }
