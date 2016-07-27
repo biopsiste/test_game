@@ -23,5 +23,3 @@ unsigned int user_event_cb(unsigned int interval, void *param) {
   return(interval);
 }
 
-
-

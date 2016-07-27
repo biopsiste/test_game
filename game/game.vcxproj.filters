@@ -16,6 +16,15 @@
     <Filter Include="Header Files\jsoncons">
       <UniqueIdentifier>{828fb9b2-0125-464b-91f6-78659c120465}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Resource Files\units">
+      <UniqueIdentifier>{85278bd6-a50b-44c2-8bd3-d785fea23480}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\tilesets">
+      <UniqueIdentifier>{003cffd0-84ec-43c3-b83a-9b9f65e8c391}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Resource Files\maps">
+      <UniqueIdentifier>{407bbdad-4835-4815-a6ce-e5f5047dd4ee}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\src\jsoncons\json.hpp">
@@ -90,31 +99,13 @@
     <ClInclude Include="..\src\battlemap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\units.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\units.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\src\animation.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\battlemap.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\buttons.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\geometry.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\textbox.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\src\texture.cpp">
-      <Filter>Source Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\src\animation.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\src\defines.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
@@ -122,8 +113,45 @@
     <ClCompile Include="..\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\animation.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\battlemap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\buttons.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\geometry.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\textbox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\texture.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\units.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+    <None Include="..\resources\units\animate.unit.json">
+      <Filter>Resource Files\units</Filter>
+    </None>
+    <None Include="..\resources\units\moving.unit.json">
+      <Filter>Resource Files\units</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\basic_ground_tiles_64_halftile.png">
+      <Filter>Resource Files\tilesets</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\resources\test_map.txt">
+      <Filter>Resource Files\maps</Filter>
+    </Text>
   </ItemGroup>
 </Project>

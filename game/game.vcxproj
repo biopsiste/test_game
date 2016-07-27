@@ -134,6 +134,7 @@
     <ClCompile Include="..\src\buttons.cpp">
       <FileType>CppHeader</FileType>
     </ClCompile>
+    <ClInclude Include="..\src\defines.h" />
     <ClInclude Include="..\src\geometry.h" />
     <ClCompile Include="..\src\geometry.cpp">
       <FileType>CppHeader</FileType>
@@ -174,7 +175,15 @@
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\resources\units\animate.unit.json" />
+    <None Include="..\resources\units\moving.unit.json" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\basic_ground_tiles_64_halftile.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="..\resources\test_map.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

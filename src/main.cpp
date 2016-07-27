@@ -2,17 +2,11 @@
 
 // STL include
 #include <iostream>
-//#include <cstdio>
-//#include <string>
-//#include <vector>
 
 // SDL include
 #include <SDL.h>
 #include <SDL_image.h>
 #include <SDL_ttf.h> 
-
-// Jsoncons
-//#include "jsoncons/json.hpp"
 
 // GOTYAY include
 #include "geometry.h"
@@ -22,47 +16,36 @@
 #include "textbox.h"
 #include "battlemap.h"
 #include "units.h"
-
-// defines (to be moved or removed)
-#define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
-
-//#define SHOW_PATH
-#define SHOW_TEXT
-//#define SHOW_BUTTONS
-
-// The buttons
-LButton gButtons[TOTAL_BUTTONS];
-
-// MSVC Debug Helper
-#ifdef _MSC_VER
-#define CLI_PAUSE           std::cout << "\nENTER to quit..."; std::cin.get();
-#endif
+#include "defines.h"
 
 using namespace std;
+
 
 // Global SDL object
 SDL_Renderer *gRenderer = NULL;
 SDL_Window *gWindow = NULL;
-//Scene sprites
+// Scene sprites
 SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
 LTexture gSpriteSheetTexture;
+// Buttons
+LButton gButtons[TOTAL_BUTTONS];
 
 int main(int argc, char* args[]) {
   //Start up SDL and create window
   if (!init()) {
-    printf("Failed to initialize!\n"); CLI_PAUSE
+    printf("Failed to initialize!\n"); CLI_PAUSE;
     exit(1);
   }
-  
+
   //Initialize SDL_ttf 
   if (TTF_Init() == -1) {
-    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError()); CLI_PAUSE
+    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError()); CLI_PAUSE;
     exit(2);
   }
 
   // Load sprite media
   if (!loadMedia(TILESET_PATH)) {
-    printf("Failed to load media!\n"); CLI_PAUSE
+    printf("Failed to load media!\n"); CLI_PAUSE;
     exit(3);
   }
 
@@ -70,12 +53,12 @@ int main(int argc, char* args[]) {
   SDL_Color currentColor = SDL_WHITE;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
-    printf("Failed to load text media!\n"); CLI_PAUSE
+    printf("Failed to load text media!\n"); CLI_PAUSE;
     exit(4);
   }
   LMultiLineTextTexture menuTextBox;
   if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
-    printf("Failed to load text media!\n"); CLI_PAUSE
+    printf("Failed to load text media!\n"); CLI_PAUSE;
     exit(5);
   }
   std::string menuText = R"(MENU:
@@ -94,22 +77,17 @@ unit animation
   SDL_Event e;
   bool show_menu = true;
   bool unit_animation_on = true;
-  bool quit = false; 
+  bool quit = false;
   const unsigned char* currentKeyStates;
 
   // Level map object
   Map map("../resources/test_map.txt");
 
   // Unit variables
-  Units unit;
-  try {
-    unit = Units("../resources/units/test.unit.json");
-  }
-  catch (std::exception &e) {
-    std::cout << "ERROR: " << e.what() << std::endl; CLI_PAUSE
-      exit(21);
-  }
-  unit.AddTimer();
+  Units animate("../resources/units/animate.unit.json");
+  animate.AddTimer(500, TIMER_ANIMATION);
+  Units moving("../resources/units/moving.unit.json");
+  moving.AddTimer(250, TIMER_MOTION);
 
   // Multipurpose Point variables
   Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
@@ -153,7 +131,7 @@ unit animation
           currentColor = SDL_RED;
           break;
 
-        // move camera
+          // move camera
         case SDLK_DOWN:
           camera.y += 10; if (camera.y + winH > map.south.y + 64 + 30) camera.y = map.south.y + 64 + 30 - winH;
           break;
@@ -186,10 +164,9 @@ unit animation
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
       }
 
-      // Timer callback points here
+      // user callback points here
       if (e.type == SDL_USEREVENT) {
-        if( unit_animation_on )
-          unit.UpdateSprite();
+        // code here
       }
 
       // Handle button events 
@@ -232,7 +209,8 @@ unit animation
 #endif
 
     // Render unit
-    unit.render(map, camera);
+    moving.render(map, camera);
+    animate.render(map, camera);
 
     // Render cursor
     map.renderCursor(camera, mouse_point, &LowCursorSprite);

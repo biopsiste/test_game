@@ -4,7 +4,7 @@
 #define SCREEN_WIDTH              1280
 #define SCREEN_HEIGHT             672
 
-#define OFFSET_X                  400.
+#define OFFSET_X                  350.
 #define OFFSET_Y                  30.
 
 #define TILE_W                    64.

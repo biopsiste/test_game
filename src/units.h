@@ -1,21 +1,30 @@
 #pragma once
+// STL include
 #include <vector>
 
+// SDL include
 #include <SDL.h>
 
-//#include "animations.h"
+// GOTYAY include
 #include "geometry.h"
 #include "battlemap.h"
 
+#define TIMER_ANIMATION    'a'
+#define TIMER_MOTION       'm'
+#define TIMER_NONE         'n'
+
+
 class Units {
 public:
-  Point Tile;
+  Point CurrentTile;
   size_t TickCounter;
   SDL_Rect CurrentSprite;
   std::vector<int> ClipsIndices;
+  std::vector<Point> TilePath;
 
   // Animation
-  SDL_TimerID AnimationTimer;
+  char TimerType;
+  SDL_TimerID UnitsTimer;
 
   // Constructor
   Units() {};
@@ -23,8 +32,13 @@ public:
   Units(std::string json_path);
 
   // Methods
-  void AddTimer();
+  void AddTimer(Uint32 dt_ms, char type);
   void UpdateSprite();
+  void UpdateTile();
   void render(Map &map, const Point &cam);
 };
+
+// Timer global callback
+Uint32 units_cb(Uint32 interval, void* param);
+
 
