@@ -22,6 +22,10 @@ Point& Point::operator+=(const Point& b) {
   this->x += b.x; this->y += b.y;
   return *this;
 }
+Point& Point::operator++() {
+  *this += Point{ 1,1 };
+  return *this;
+}
 Point operator+(Point th, const Point& b) {
   th += b;
   return th;
@@ -33,6 +37,10 @@ Point& Point::operator-=(const Point& b) {
 Point operator-(Point th, const Point& b) {
   th -= b;
   return th;
+}
+Point& Point::operator--() {
+  *this -= Point{ 1,1 };
+  return *this;
 }
 std::ostream& operator<<(std::ostream& os, const Point& p) {
   os << "[" << p.x << "," << p.y << "]";
@@ -52,20 +60,20 @@ Point tile2screen(const Point& tile) {
   return tile2screen(tile.x, tile.y);
 }
 
-//Point mouse2tile(const Point& mouse) {
-//  int x = int(mouse.x);
-//  int y = int(mouse.y - TILE_H / 2. + TILE_GROUND_HEIGHT_OFFSET);
-//  int I = int((x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5);
-//  int J = int(-(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5);
-//  return Point{ I, J };
-//}
-//Point mouse2tile_high(const Point& mouse) {
-//  int x = int(mouse.x);
-//  int y = int(mouse.y - TILE_H / 2. + 2 * TILE_GROUND_HEIGHT_OFFSET);
-//  int I = int((x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5);
-//  int J = int(-(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5);
-//  return Point{ I, J };
-//}
+Point mouse2tile(const Point& mouse) {
+  int x = int(mouse.x);
+  int y = int(mouse.y - TILE_H / 2. + TILE_GROUND_HEIGHT_OFFSET);
+  int I = int((x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5);
+  int J = int(-(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5);
+  return Point{ I, J };
+}
+Point mouse2tile_high(const Point& mouse) {
+  int x = int(mouse.x);
+  int y = int(mouse.y - TILE_H / 2. + 2 * TILE_GROUND_HEIGHT_OFFSET);
+  int I = int((x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1 + 0.5);
+  int J = int(-(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) + 0.5);
+  return Point{ I, J };
+}
 
 inline bool are_4neighbors(const Point& a, const Point& b) {
   return (a.x == b.x && abs(a.y - b.y) == 1) || (a.y == b.y && abs(a.x - b.x) == 1);

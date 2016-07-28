@@ -37,7 +37,7 @@ CubeStack::CubeStack(Point _coords, std::string stackentry) : coords(_coords) {
   std::istringstream istr(stackentry);
   std::string token;
   int i = 0;
-  while(std::getline(istr, token, '|')) {
+  while (std::getline(istr, token, '|')) {
     //std::cout << token << std::endl; //system("pause");
 
     auto scr_coords = tile2screen(_coords) - Point{ 0, i*int(TILE_H) / 2 };
@@ -81,13 +81,13 @@ Map::Map(std::string filename) {
   for (int i = 0; i < w; i++) {
     for (int j = 0; j < h; j++) {
       auto upper_left = m[i][j].s.back().screen_coords;
-      for(int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
-        for(int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
+      for (int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
+        for (int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
           int y = int(yy - TILE_H / 2. + m[i][j].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET);
-          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if(dI > 0) dI--; auto I = lrint(dI);
+          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if (dI > 0) dI--; auto I = lrint(dI);
           double dJ = -(xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); auto J = lrint(dJ);
-          if(m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
-          else if(yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
+          if (m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
+          else if (yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
         }
       }
     }
@@ -97,7 +97,6 @@ Map::Map(std::string filename) {
   south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
   west = tile2screen(Point{ 0,this->h() - 1 });
   east = tile2screen(Point{ this->w() - 1 , 0 });
-
 }
 
 Point Map::mouse2basetile(const Point& mouse) {
@@ -204,3 +203,117 @@ std::vector<Point> Map::findPath_Astar(const Point& origin, const Point& destina
   return path;
 }
 
+int myrounder(const double &x) {
+  int n;
+  if (x >= 0)
+    n = int(x);
+  else
+    n = -int(-x) - 1;
+  return n;
+}
+
+//////// ALLE
+Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
+
+  std::cout << "--- Entering piuficodibio \n";
+
+  Point TileCandidate{ 0,0 };
+
+  int x = int(mouse.x);
+  int y = int(mouse.y - TILE_H / 4);
+
+  double xf = (x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1;
+  double yf = -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.);
+
+  Point screen{ myrounder(xf), myrounder(yf) },
+    low(screen), high(screen), temp(screen);
+
+  if (screen.x < w() &&     // These conditions ensure that selected tile
+    screen.y < h() &&       // is inside the upper indices bounds 
+    ((screen.x - screen.y) <= w()) &&       // These conditions ensure the existence
+    ((screen.y - screen.x) <= h())          // of low tile
+    ) {
+
+    // find the highest and lowest tile along the vertical tile column
+    if (screen.x >= 0 && screen.y >= 0) {      // I quadrante
+      while (high.x >= 0 && high.y >= 0) --high;
+      ++high;
+    }
+    else if (screen.x < 0 && screen.y >= 0)   // II quadrante
+      while (high.x < 0) ++high;
+    else if (screen.x >= 0 && screen.y < 0)   // IV quadrante
+      while (high.y < 0) ++high;
+    else if (screen.x < 0 && screen.y < 0)   // III quadrante
+      while (high.x < 0 || high.y < 0) ++high;
+    else {
+      //wtf
+    }
+    //    --high;   // to move high slightly above the boundary, see while loop for motivation
+
+    while (low.x < w() && low.y < h()) ++low; //std::cout << ++low << " ";
+    if (!(low.x < w() && low.y < h())) --low;
+    if (low.x < 0 || low.y < 0) ++low;
+
+    // compare each stack (along the vertical tile column) height with the screen tile
+    Point candidate(low);
+    bool is_full = false;
+    while (candidate != high) {
+//      while (candidate.y - high.y >= 0) {
+      if (2 * (candidate.y - screen.y) - m[candidate.x][candidate.y].altitude() == 0) {
+        is_full = true;
+        break;
+      }
+      //      if (!found) candidate = screen;
+      //          std::cout << m[candidate.x][candidate.y].altitude() << std::endl;
+      //      std::cout << "cerco candidate " << screen << std::endl;
+      std::cout << "[loop] c" << candidate << 
+        " h" << high << 
+        " d" << candidate.y - high.y <<
+        " a" << m[candidate.x][candidate.y].altitude() << std::endl;
+      --candidate;
+    }
+
+
+    int xh = int(mouse.x);
+    int yh = int(mouse.y - TILE_H / 2);
+
+    double xfh = (xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.) - 1;
+    double yfh = -(xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.);
+
+    Point screenh{ myrounder(xfh), myrounder(yfh) };
+
+    bool is_half = false;
+    Point candidateh = low;
+    while (candidateh != high) {
+      if (2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() == -1) {
+        is_half = true;
+        break;
+      }
+      //std::cout << candidateh << " " << m[candidateh.x][candidateh.y].altitude() << std::endl;
+      --candidateh;
+    }
+
+
+    std::cout
+      //<< "mouse " << mouse << " "
+      //<< "w " << w() << "h " << h() << " " 
+                //<< "tilef " << xf << " " << yf 
+      << "low " << low << " "
+      << "high " << high << "\n"
+      << "s " << screen << " "
+      << "can " << candidate << " f" << is_full << " ";
+    if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
+      std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
+    std::cout << std::endl;
+    std::cout << "sh " << screenh << " "
+      << "canh " << candidateh << " h" << is_half << " ";
+    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
+      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
+    std::cout << std::endl;
+
+
+  }
+
+
+  return TileCandidate;
+}

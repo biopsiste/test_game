@@ -162,6 +162,7 @@ unit animation
       // Get mouse position
       if (e.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
+        map.mouse2tile_piuficodiquellodibio(mouse_point - camera);
       }
 
       // user callback points here
@@ -208,9 +209,11 @@ unit animation
     for (auto& p : bestpath) map.renderSprite(camera, p, &highlighterSprite);
 #endif
 
+#ifdef SHOW_UNITS
     // Render unit
     moving.render(map, camera);
     animate.render(map, camera);
+#endif
 
     // Render cursor
     map.renderCursor(camera, mouse_point, &LowCursorSprite);

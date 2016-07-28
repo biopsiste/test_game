@@ -18,9 +18,12 @@ struct Point {
   bool operator==(const Point& b) const;
   bool operator!=(const Point& b) const;
   Point& operator+=(const Point& b);
+  Point& Point::operator++();
   friend Point operator+(Point th, const Point& b);
-  Point& operator-=(const Point& b);
   friend Point operator-(Point th, const Point& b);
+  Point& operator-=(const Point& b);
+  Point& operator--();
+
 
   friend std::ostream& operator<<(std::ostream& os, const Point& p);
 };
@@ -31,8 +34,7 @@ struct PointHasher {
 Point tile2screen(int i, int j);
 Point tile2screen(const Point& tile);
 
-//Point mouse2tile(const Point& mouse);
-//Point mouse2tile_high(const Point& mouse);
+Point mouse2tile(const Point& mouse);
+Point mouse2tile_high(const Point& mouse);
 
 inline bool are_4neighbors(const Point& a, const Point& b);
-

@@ -49,6 +49,7 @@ struct Map {
 
   // Geometry
   Point mouse2basetile(const Point& mouse);
+  Point mouse2tile_piuficodiquellodibio(Point mouse);
 
   // Rendering
   void render(const Point& cam);
@@ -73,3 +74,18 @@ struct Map {
 
   std::vector<Point> findPath_Astar(const Point& origin, const Point& destination);
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
