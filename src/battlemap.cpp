@@ -226,19 +226,17 @@ Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
   double yf = -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.);
 
   Point screen{ myrounder(xf), myrounder(yf) },
-    low(screen), high(screen), temp(screen);
+    low(screen), high(screen);
 
   if (screen.x < w() &&     // These conditions ensure that selected tile
     screen.y < h() &&       // is inside the upper indices bounds 
-    ((screen.x - screen.y) <= w()) &&       // These conditions ensure the existence
-    ((screen.y - screen.x) <= h())          // of low tile
+    ((screen.x - screen.y) < w()) &&       // These conditions ensure the existence
+    ((screen.y - screen.x) < h())          // of low tile
     ) {
 
     // find the highest and lowest tile along the vertical tile column
-    if (screen.x >= 0 && screen.y >= 0) {      // I quadrante
-      while (high.x >= 0 && high.y >= 0) --high;
-      ++high;
-    }
+    if (screen.x >= 0 && screen.y >= 0)       // I quadrante
+      while (high.x > 0 && high.y > 0) --high;
     else if (screen.x < 0 && screen.y >= 0)   // II quadrante
       while (high.x < 0) ++high;
     else if (screen.x >= 0 && screen.y < 0)   // IV quadrante
@@ -250,15 +248,15 @@ Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
     }
     //    --high;   // to move high slightly above the boundary, see while loop for motivation
 
-    while (low.x < w() && low.y < h()) ++low; //std::cout << ++low << " ";
-    if (!(low.x < w() && low.y < h())) --low;
-    if (low.x < 0 || low.y < 0) ++low;
+    // this enforce low to be inside the boundary index
+    while (low.x < w() - 1 && low.y < h() - 1) ++low;  //std::cout << ++low << " ";
 
     // compare each stack (along the vertical tile column) height with the screen tile
     Point candidate(low);
     bool is_full = false;
-    while (candidate != high) {
-//      while (candidate.y - high.y >= 0) {
+    //for(int i=0; )
+    while (candidate != high - Point{ 1,1 }) {
+      //      while (candidate.y - high.y >= 0) {
       if (2 * (candidate.y - screen.y) - m[candidate.x][candidate.y].altitude() == 0) {
         is_full = true;
         break;
@@ -266,13 +264,11 @@ Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
       //      if (!found) candidate = screen;
       //          std::cout << m[candidate.x][candidate.y].altitude() << std::endl;
       //      std::cout << "cerco candidate " << screen << std::endl;
-      std::cout << "[loop] c" << candidate << 
-        " h" << high << 
+      std::cout << "[full] c" << candidate <<
         " d" << candidate.y - high.y <<
         " a" << m[candidate.x][candidate.y].altitude() << std::endl;
       --candidate;
     }
-
 
     int xh = int(mouse.x);
     int yh = int(mouse.y - TILE_H / 2);
@@ -280,16 +276,37 @@ Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
     double xfh = (xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.) - 1;
     double yfh = -(xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.);
 
-    Point screenh{ myrounder(xfh), myrounder(yfh) };
+    Point screenh{ myrounder(xfh), myrounder(yfh) },
+      lowh(screenh), highh(screenh);
+
+    // find the highest and lowest tile along the vertical tile column
+    if (screenh.x >= 0 && screenh.y >= 0)       // I quadrante
+      while (highh.x > 0 && highh.y > 0) --highh;
+    else if (screenh.x < 0 && screenh.y >= 0)   // II quadrante
+      while (highh.x < 0) ++highh;
+    else if (screenh.x >= 0 && screenh.y < 0)   // IV quadrante
+      while (highh.y < 0) ++highh;
+    else if (screenh.x < 0 && screenh.y < 0)   // III quadrante
+      while (highh.x < 0 || highh.y < 0) ++highh;
+    else {
+      //wtf
+    }
+
+    // this enforce lowh to be inside the boundary index
+    while (lowh.x < w() - 1 && lowh.y < h() - 1) ++lowh;  //std::cout << ++low << " ";
 
     bool is_half = false;
-    Point candidateh = low;
-    while (candidateh != high) {
-      if (2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() == -1) {
+    Point candidateh(lowh);
+    while (candidateh != highh - Point{ 1,1 }) {
+//      while (candidateh != highh - Point{ 1,1 }) {
+      //      while (candidateh != high) {
+      if (2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() == 1) {
         is_half = true;
         break;
       }
-      //std::cout << candidateh << " " << m[candidateh.x][candidateh.y].altitude() << std::endl;
+      std::cout << "[half] c" << candidateh <<
+        " p" << 2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() <<
+        " a" << m[candidateh.x][candidateh.y].altitude() << std::endl;
       --candidateh;
     }
 
@@ -298,19 +315,33 @@ Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
       //<< "mouse " << mouse << " "
       //<< "w " << w() << "h " << h() << " " 
                 //<< "tilef " << xf << " " << yf 
-      << "low " << low << " "
-      << "high " << high << "\n"
-      << "s " << screen << " "
-      << "can " << candidate << " f" << is_full << " ";
-    if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
-      std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
+      << " s" << screen << " "
+      << " l" << low << " "
+      << " h" << high << " "
+      << "  can" << candidate << " f" << is_full << " ";
+    //    if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
+    //      std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
     std::cout << std::endl;
-    std::cout << "sh " << screenh << " "
-      << "canh " << candidateh << " h" << is_half << " ";
-    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
-      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
+    std::cout 
+      << "sh" << screenh << " "
+      << "lh" << lowh << " "
+      << "hh" << highh << " "
+      << "canh" << candidateh << " h" << is_half << " ";
+//    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
+//      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
     std::cout << std::endl;
 
+    if (is_full && !is_half)
+      std::cout << "FULL tile" << std::endl;
+    else if (!is_full && is_half)
+      std::cout << "HALF tile" << std::endl;
+    else if (is_full && is_half)
+      std::cout << "HALF tile" << std::endl;
+    else if (!is_full && !is_half)
+      std::cout << "NO tile" << std::endl;
+    else {
+      // wtf
+    }
 
   }
 

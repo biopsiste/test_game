@@ -90,7 +90,7 @@ unit animation
   moving.AddTimer(250, TIMER_MOTION);
 
   // Multipurpose Point variables
-  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{};
+  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{}, mouseTile{};
   Point camera{ 0, 0 };
   vector<Point> bestpath;
 
@@ -162,7 +162,7 @@ unit animation
       // Get mouse position
       if (e.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
-        map.mouse2tile_piuficodiquellodibio(mouse_point - camera);
+        mouseTile = map.mouse2tile_piuficodiquellodibio(mouse_point - camera);
       }
 
       // user callback points here
