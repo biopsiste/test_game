@@ -71,7 +71,7 @@ Map::Map(std::string filename) {
     while (istr >> stackentry) {
       //std::cout << stackentry << std::endl;
       //std::cout << i << " " << j << std::endl;
-      m[i][j] = CubeStack({ i,j }, stackentry);
+      m[j][i] = CubeStack({ j,i }, stackentry);
       j++;
     }
     i++;
