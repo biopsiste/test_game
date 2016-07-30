@@ -1,6 +1,7 @@
 #pragma once
 // MSVC Debug Helper
 #ifdef _MSC_VER
+#include <iostream>
 #define CLI_PAUSE           std::cout << "\nENTER to quit..."; std::cin.get();
 #endif
 
@@ -9,4 +10,5 @@
 //#define SHOW_PATH
 #define SHOW_TEXT
 //#define SHOW_BUTTONS
-//#define SHOW_UNITS
+#define SHOW_UNITS
+#define SHOW_GUI

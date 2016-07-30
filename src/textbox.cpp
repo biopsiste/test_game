@@ -1,4 +1,3 @@
-#pragma once
 #include <sstream>
 
 #include "textbox.h"

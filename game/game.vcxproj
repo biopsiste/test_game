@@ -139,6 +139,7 @@
     <ClCompile Include="..\src\geometry.cpp">
       <FileType>CppHeader</FileType>
     </ClCompile>
+    <ClInclude Include="..\src\gui.h" />
     <ClInclude Include="..\src\jsoncons\json.hpp" />
     <ClInclude Include="..\src\jsoncons\json1.hpp" />
     <ClInclude Include="..\src\jsoncons\json2.hpp" />
@@ -159,6 +160,7 @@
     <ClInclude Include="..\src\jsoncons\output_format.hpp" />
     <ClInclude Include="..\src\jsoncons\parse_error_handler.hpp" />
     <ClInclude Include="..\src\textbox.h" />
+    <ClCompile Include="..\src\gui.cpp" />
     <ClCompile Include="..\src\textbox.cpp">
       <FileType>CppHeader</FileType>
     </ClCompile>

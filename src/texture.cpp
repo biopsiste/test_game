@@ -1,10 +1,9 @@
-#pragma once
 #include "texture.h"
 #include <SDL_image.h>
 
 extern SDL_Renderer *gRenderer;
 extern SDL_Window *gWindow;
-extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite, selectorSprite;
 extern LTexture gSpriteSheetTexture;
 
 LTexture::LTexture(){
@@ -146,8 +145,9 @@ bool loadMedia(std::string path) {
     cursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
     HighCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX-1];
     LowCursorSprite = gSpriteClips[TILESET_CURSOR_TILE_INDEX];
-		highlighterSprite = gSpriteClips[TILESET_HIGHLIGHTER_TILE_INDEX];
-	}
+    highlighterSprite = gSpriteClips[TILESET_HIGHLIGHTER_TILE_INDEX];
+    selectorSprite = gSpriteClips[TILESET_SELECTOR_TILE_INDEX];
+  }
 
   return success;
 }

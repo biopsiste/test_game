@@ -29,6 +29,7 @@
 #define TILESET_UNIT_TILE_INDEX          47
 #define TILESET_CURSOR_TILE_INDEX        8
 #define TILESET_HIGHLIGHTER_TILE_INDEX   16
+#define TILESET_SELECTOR_TILE_INDEX      24
 #endif
 
 #define UNIT_SPRITE_NUM                  4

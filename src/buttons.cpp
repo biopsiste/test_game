@@ -1,4 +1,3 @@
-#pragma once
 #include "texture.h"
 #include "buttons.h"
 
