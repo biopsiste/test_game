@@ -213,8 +213,6 @@ void Map::renderOnTop(const Point& tile, SDL_Rect * clip) {
 
 
 //////// ALLE
-
-
 int myrounder(const double &x) {
   int n;
   if (x >= 0)
@@ -237,13 +235,13 @@ bool Map::isSafeTile(const Point & tile) {
 
 Point Map::findHighest(const Point & tile) {
   Point high(tile);
-  if (tile.x >= 0 && tile.y >= 0)       // I quadrante
+  if (tile.x >= 0 && tile.y >= 0)       // I quadrant
     while (high.x > 0 && high.y > 0) --high;
-  else if (tile.x < 0 && tile.y >= 0)   // II quadrante
+  else if (tile.x < 0 && tile.y >= 0)   // II quadrant
     while (high.x < 0) ++high;
-  else if (tile.x < 0 && tile.y < 0)    // III quadrante
+  else if (tile.x < 0 && tile.y < 0)    // III quadrant
     while (high.x < 0 || high.y < 0) ++high;
-  else if (tile.x >= 0 && tile.y < 0)   // IV quadrante
+  else if (tile.x >= 0 && tile.y < 0)   // IV quadrant
     while (high.y < 0) ++high;
   else {
     //wtf
@@ -258,16 +256,11 @@ Point Map::findLowest(const Point & tile) {
 }
 
 Point Map::mouse2basetile(const Point& mouse) {
-
-  std::cout << "--- Entering piuficodibio \n";
-
   Point TileCandidate{ -1,-1 };
 
   int x = int(mouse.x);
   int y = int(mouse.y - TILE_H / 4);
-  int yh = int(mouse.y /*- TILE_H / 2*/);
-//  int yh = int(mouse.y);
-
+  int yh = int(mouse.y);
   double xf = (x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1;
   double yf = -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.);
   double xfh = (x - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.) - 1;
@@ -288,9 +281,9 @@ Point Map::mouse2basetile(const Point& mouse) {
         is_full = true;
         break;
       }
-      //     std::cout << "[full] c" << candidate <<
-      //       " d" << candidate.y - high.y <<
-      //       " a" << m[candidate.x][candidate.y].altitude() << std::endl;
+//      std::cout << "[full] c" << candidate0 <<
+//        " d" << candidate0.y - high.y <<
+//        " a" << m[candidate0.x][candidate0.y].altitude() << std::endl;
       --candidate0;
     }
 
@@ -310,16 +303,15 @@ Point Map::mouse2basetile(const Point& mouse) {
         is_half = true;
         break;
       }
-      std::cout << "[half] c" << candidate1 <<
-        " p" << 2 * (candidate1.y - tile1.y) - m[candidate1.x][candidate1.y].altitude() <<
-        " a" << m[candidate1.x][candidate1.y].altitude() << 
-        std::endl;
+//      std::cout << "[half] c" << candidate1 <<
+//        " p" << 2 * (candidate1.y - tile1.y) - m[candidate1.x][candidate1.y].altitude() <<
+//        " a" << m[candidate1.x][candidate1.y].altitude() << 
+//        std::endl;
       --candidate1;
     }
 
-
-    //    if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
-    //      std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
+//        if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
+//          std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
 //        std::cout << std::endl;
 //        std::cout 
 //          << "sh" << tile1 << " "
@@ -327,8 +319,8 @@ Point Map::mouse2basetile(const Point& mouse) {
 //          << "hh" << high << " "
 //          << "canh" << candidate1 << " h" << is_half << " "
 //          << std::endl;
-    //    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
-    //      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
+//        if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
+//          std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
 
     if (is_full && !is_half) {                    // FULL tile
 //      std::cout << "FULL tile" << std::endl;
