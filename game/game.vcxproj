@@ -179,14 +179,11 @@
     <ClCompile Include="..\src\main.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\resources\maps\level1.map" />
+    <None Include="..\resources\maps\tile_detection.map" />
     <None Include="..\resources\units\animate.unit.json" />
     <None Include="..\resources\units\moving.unit.json" />
     <None Include="packages.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\resources\maps\test_map.txt" />
-    <Text Include="..\resources\maps\test_map_bio.txt" />
-    <Text Include="..\resources\maps\test_map_t.txt" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\tilsets\basic_ground_tiles_64_halftile.png" />

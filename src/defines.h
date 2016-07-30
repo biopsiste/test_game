@@ -12,7 +12,7 @@
 //#define SHOW_BUTTONS
 #define SHOW_TEXT
 #define SHOW_CURSOR
-//#define SHOW_UNITS
+#define SHOW_UNITS
 //#define SHOW_PATH
 #define SHOW_GUI
 

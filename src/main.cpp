@@ -81,7 +81,7 @@ unit animation
   const unsigned char* currentKeyStates;
 
   // Level map object
-  Map map("../resources/maps/test_map.txt");
+  Map map("../resources/maps/level1.map");
 
   // Unit variables
   Units animate("../resources/units/animate.unit.json");
@@ -170,7 +170,7 @@ unit animation
       }
       if(e.type == SDL_MOUSEBUTTONUP) {
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
-        mouse_clicked_tile = map.mouse2basetile(mouse_point + camera);
+        mouse_clicked_tile = map.mouse2basetile(mouse_point - camera);
         selected_unit = nullptr;
         if(animate.CurrentTile == mouse_clicked_tile) selected_unit = &animate;
         else if(moving.CurrentTile == mouse_clicked_tile) selected_unit = &moving;
@@ -224,8 +224,8 @@ unit animation
 
 #ifdef SHOW_UNITS
     // Render unit
-    moving.render(map, camera);
-    animate.render(map, camera);
+    moving.render(map);
+    animate.render(map);
 #endif
 
 #ifdef SHOW_TEXT

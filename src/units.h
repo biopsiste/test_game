@@ -47,7 +47,7 @@ public:
   void AddTimer(Uint32 dt_ms, char type);
   void UpdateSprite();
   void UpdateTile();
-//  void render(Map &map, const Point &cam);
+  void render(Map &map);
 
   void initStats();
 	void updateStatusBar();

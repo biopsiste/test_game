@@ -111,6 +111,9 @@
     <ClInclude Include="..\src\utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="..\src\gui.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp">
@@ -140,6 +143,9 @@
     <ClCompile Include="..\src\gui.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\src\utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -149,17 +155,12 @@
     <None Include="..\resources\units\moving.unit.json">
       <Filter>Resource Files\units</Filter>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\resources\maps\test_map.txt">
+    <None Include="..\resources\maps\level1.map">
       <Filter>Resource Files\maps</Filter>
-    </Text>
-    <Text Include="..\resources\maps\test_map_t.txt">
+    </None>
+    <None Include="..\resources\maps\tile_detection.map">
       <Filter>Resource Files\maps</Filter>
-    </Text>
-    <Text Include="..\resources\maps\test_map_bio.txt">
-      <Filter>Resource Files\maps</Filter>
-    </Text>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Image Include="..\resources\tilsets\basic_ground_tiles_64_halftile.png">
