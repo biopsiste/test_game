@@ -180,10 +180,12 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\basic_ground_tiles_64_halftile.png" />
+    <Text Include="..\resources\maps\test_map.txt" />
+    <Text Include="..\resources\maps\test_map_bio.txt" />
+    <Text Include="..\resources\maps\test_map_t.txt" />
   </ItemGroup>
   <ItemGroup>
-    <Text Include="..\resources\test_map.txt" />
+    <Image Include="..\resources\tilsets\basic_ground_tiles_64_halftile.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

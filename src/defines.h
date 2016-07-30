@@ -6,7 +6,12 @@
 
 #define MESSAGE             "no text wrapping built-in (hit X to quit or D to hide/show)"
 
-//#define SHOW_PATH
-#define SHOW_TEXT
 //#define SHOW_BUTTONS
+#define SHOW_TEXT
+#define SHOW_CURSOR
 //#define SHOW_UNITS
+//#define SHOW_PATH
+
+
+#define MAP_TEST_1_PATH     "../resources/maps/test_map_t.txt"
+

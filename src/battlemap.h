@@ -18,7 +18,8 @@ struct Cube {
 
 //////// Cube stack object
 // 
-struct CubeStack {
+class CubeStack {
+public:
   std::vector<Cube> s;
   Point coords;
 
@@ -31,9 +32,10 @@ struct CubeStack {
 
 //////// Map object (maybe a name too common...add namespace?)
 //
-struct Map {
+class Map {
   //std::vector<MapLayer> m;
   std::vector<std::vector<CubeStack>> m;
+public:
   std::unordered_map<Point, Cube*, PointHasher> mouse_map;
   Point north, south, west, east;
 
@@ -46,15 +48,19 @@ struct Map {
   bool is_in_map(const Point& p) {
     return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
   }
+  bool isSafeTile(const Point & tile);
 
   // Geometry
+  Point Map::findLowest(const Point & tile);
+  Point Map::findHighest(const Point & tile);
   Point mouse2basetile(const Point& mouse);
   Point mouse2tile_piuficodiquellodibio(Point mouse);
 
-  // Rendering
+  ////// Rendering
   void render(const Point& cam);
   void renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * tile);
   void renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile);
+  void renderOnTop(const Point& tileIndices, SDL_Rect * tile);
 
   // A* algo
   std::vector<Point> get_4neighbors(const Point& p);

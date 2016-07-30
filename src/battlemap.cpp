@@ -58,40 +58,40 @@ int CubeStack::altitude() { //total altitude
 
 Map::Map(std::string filename) {
   std::ifstream ifi(filename);
-  std::string line, stackentry; int w, h;
+  std::string line, stackentry;
+  int w, h;
   std::getline(ifi, line); //ignore header
   ifi >> w >> h; //std::cout << w << " " << h << std::endl;
   std::getline(ifi, line); //ignore w h
   m.assign(w, std::vector<CubeStack>(h));
-  int i = 0;
+  int r = 0;
   while (std::getline(ifi, line)) {
-    //std::cout << line << std::endl; system("pause");
     std::istringstream istr(line);
-    int j = 0;
+    int c = 0;
     while (istr >> stackentry) {
-      //std::cout << stackentry << std::endl;
-      //std::cout << i << " " << j << std::endl;
-      m[j][i] = CubeStack({ j,i }, stackentry);
-      j++;
+      //      std::cout << stackentry << std::endl;
+            //std::cout << r << " " << c << std::endl;
+      m[c][r] = CubeStack(Point{ c, r }, stackentry);
+      c++;  // <--- cool!
     }
-    i++;
+    r++;
   }
 
   //build mouse_map
-  for (int i = 0; i < w; i++) {
-    for (int j = 0; j < h; j++) {
-      auto upper_left = m[i][j].s.back().screen_coords;
-      for (int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
-        for (int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
-          int y = int(yy - TILE_H / 2. + m[i][j].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET);
-          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if (dI > 0) dI--; auto I = lrint(dI);
-          double dJ = -(xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); auto J = lrint(dJ);
-          if (m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
-          else if (yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
-        }
-      }
-    }
-  }
+//  for (int i = 0; i < w; i++) {
+//    for (int j = 0; j < h; j++) {
+//      auto upper_left = m[i][j].s.back().screen_coords;
+//      for (int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
+//        for (int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
+//          int y = int(yy - TILE_H / 2. + m[i][j].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET);
+//          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if (dI > 0) dI--; auto I = lrint(dI);
+//          double dJ = -(xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); auto J = lrint(dJ);
+//          if (m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
+//          else if (yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
+//        }
+//      }
+//    }
+//  }
   std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   north = tile2screen(Point{ 0, 0 });
   south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
@@ -99,10 +99,10 @@ Map::Map(std::string filename) {
   east = tile2screen(Point{ this->w() - 1 , 0 });
 }
 
-Point Map::mouse2basetile(const Point& mouse) {
-  if (mouse_map.count(mouse)) return mouse_map[mouse]->base_coords;
-  return{ -999,-999 };
-}
+//Point Map::mouse2basetile(const Point& mouse) {
+//  if (mouse_map.count(mouse)) return mouse_map[mouse]->base_coords;
+//  return{ -999,-999 };
+//}
 
 void Map::renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
   Point vert_offset{ 0, m[tile_index.x][tile_index.y].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET };
@@ -203,6 +203,18 @@ std::vector<Point> Map::findPath_Astar(const Point& origin, const Point& destina
   return path;
 }
 
+void Map::renderOnTop(const Point& tile, SDL_Rect * clip) {
+  if (is_in_map(tile))
+    gSpriteSheetTexture.render(m[tile.x][tile.y].s.back().screen_coords -
+      Point{ 0, m[tile.x][tile.y].s.back().altitude*int(TILE_H / 4) }, clip);
+}
+
+
+
+
+//////// ALLE
+
+
 int myrounder(const double &x) {
   int n;
   if (x >= 0)
@@ -212,139 +224,133 @@ int myrounder(const double &x) {
   return n;
 }
 
-//////// ALLE
-Point Map::mouse2tile_piuficodiquellodibio(Point mouse) {
+bool Map::isSafeTile(const Point & tile) {
+  if (tile.x < w() &&     // These conditions ensure that selected tile
+    tile.y < h() &&       // is inside the upper indices bounds 
+    ((tile.x - tile.y) < w()) &&       // These conditions ensure the existence
+    ((tile.y - tile.x) < h())          // of low tile
+    )
+    return true;
+  else
+    return false;
+}
+
+Point Map::findHighest(const Point & tile) {
+  Point high(tile);
+  if (tile.x >= 0 && tile.y >= 0)       // I quadrante
+    while (high.x > 0 && high.y > 0) --high;
+  else if (tile.x < 0 && tile.y >= 0)   // II quadrante
+    while (high.x < 0) ++high;
+  else if (tile.x < 0 && tile.y < 0)    // III quadrante
+    while (high.x < 0 || high.y < 0) ++high;
+  else if (tile.x >= 0 && tile.y < 0)   // IV quadrante
+    while (high.y < 0) ++high;
+  else {
+    //wtf
+  }
+  return high;
+}
+
+Point Map::findLowest(const Point & tile) {
+  Point low(tile);
+  while (low.x < w() - 1 && low.y < h() - 1) ++low;
+  return low;
+}
+
+Point Map::mouse2basetile(const Point& mouse) {
 
   std::cout << "--- Entering piuficodibio \n";
 
-  Point TileCandidate{ 0,0 };
+  Point TileCandidate{ -1,-1 };
 
   int x = int(mouse.x);
   int y = int(mouse.y - TILE_H / 4);
+  int yh = int(mouse.y /*- TILE_H / 2*/);
+//  int yh = int(mouse.y);
 
   double xf = (x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.) - 1;
   double yf = -(x - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.);
+  double xfh = (x - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.) - 1;
+  double yfh = -(x - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.);
 
-  Point screen{ myrounder(xf), myrounder(yf) },
-    low(screen), high(screen);
+  Point tile0{ myrounder(xf), myrounder(yf) },    // _0 refers to the altitude level
+    tile1{ myrounder(xfh), myrounder(yfh) },
+    low, high;
 
-  if (screen.x < w() &&     // These conditions ensure that selected tile
-    screen.y < h() &&       // is inside the upper indices bounds 
-    ((screen.x - screen.y) < w()) &&       // These conditions ensure the existence
-    ((screen.y - screen.x) < h())          // of low tile
-    ) {
+  if (isSafeTile(tile0) && isSafeTile(tile1)) {
 
-    // find the highest and lowest tile along the vertical tile column
-    if (screen.x >= 0 && screen.y >= 0)       // I quadrante
-      while (high.x > 0 && high.y > 0) --high;
-    else if (screen.x < 0 && screen.y >= 0)   // II quadrante
-      while (high.x < 0) ++high;
-    else if (screen.x >= 0 && screen.y < 0)   // IV quadrante
-      while (high.y < 0) ++high;
-    else if (screen.x < 0 && screen.y < 0)   // III quadrante
-      while (high.x < 0 || high.y < 0) ++high;
-    else {
-      //wtf
-    }
-    //    --high;   // to move high slightly above the boundary, see while loop for motivation
-
-    // this enforce low to be inside the boundary index
-    while (low.x < w() - 1 && low.y < h() - 1) ++low;  //std::cout << ++low << " ";
-
-    // compare each stack (along the vertical tile column) height with the screen tile
-    Point candidate(low);
+    high = findHighest(tile0);
+    low = findLowest(tile0);
+    Point candidate0 = low;
     bool is_full = false;
-    //for(int i=0; )
-    while (candidate != high - Point{ 1,1 }) {
-      //      while (candidate.y - high.y >= 0) {
-      if (2 * (candidate.y - screen.y) - m[candidate.x][candidate.y].altitude() == 0) {
+    while (candidate0 != high - Point{ 1,1 }) {
+      if (2 * (candidate0.y - tile0.y) - m[candidate0.x][candidate0.y].altitude() == 0) {
         is_full = true;
         break;
       }
-      //      if (!found) candidate = screen;
-      //          std::cout << m[candidate.x][candidate.y].altitude() << std::endl;
-      //      std::cout << "cerco candidate " << screen << std::endl;
-      std::cout << "[full] c" << candidate <<
-        " d" << candidate.y - high.y <<
-        " a" << m[candidate.x][candidate.y].altitude() << std::endl;
-      --candidate;
+      //     std::cout << "[full] c" << candidate <<
+      //       " d" << candidate.y - high.y <<
+      //       " a" << m[candidate.x][candidate.y].altitude() << std::endl;
+      --candidate0;
     }
 
-    int xh = int(mouse.x);
-    int yh = int(mouse.y - TILE_H / 2);
+//    std::cout
+//      << " s" << tile0 << " "
+//      << " l" << low << " "
+//      << " h" << high << " "
+//      << "  can" << candidate0 << " f" << is_full << " "
+//      << std::endl;
 
-    double xfh = (xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.) - 1;
-    double yfh = -(xh - OFFSET_X) / TILE_W + (yh - OFFSET_Y) / (TILE_H / 2.);
-
-    Point screenh{ myrounder(xfh), myrounder(yfh) },
-      lowh(screenh), highh(screenh);
-
-    // find the highest and lowest tile along the vertical tile column
-    if (screenh.x >= 0 && screenh.y >= 0)       // I quadrante
-      while (highh.x > 0 && highh.y > 0) --highh;
-    else if (screenh.x < 0 && screenh.y >= 0)   // II quadrante
-      while (highh.x < 0) ++highh;
-    else if (screenh.x >= 0 && screenh.y < 0)   // IV quadrante
-      while (highh.y < 0) ++highh;
-    else if (screenh.x < 0 && screenh.y < 0)   // III quadrante
-      while (highh.x < 0 || highh.y < 0) ++highh;
-    else {
-      //wtf
-    }
-
-    // this enforce lowh to be inside the boundary index
-    while (lowh.x < w() - 1 && lowh.y < h() - 1) ++lowh;  //std::cout << ++low << " ";
-
+    high = findHighest(tile1);
+    low = findLowest(tile1);
+    Point candidate1 = low;
     bool is_half = false;
-    Point candidateh(lowh);
-    while (candidateh != highh - Point{ 1,1 }) {
-//      while (candidateh != highh - Point{ 1,1 }) {
-      //      while (candidateh != high) {
-      if (2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() == 1) {
+    while (candidate1 != high - Point{ 1,1 }) {
+      if (2 * (candidate1.y - tile1.y) - m[candidate1.x][candidate1.y].altitude() == -1) {
         is_half = true;
         break;
       }
-      std::cout << "[half] c" << candidateh <<
-        " p" << 2 * (candidateh.y - screenh.y) - m[candidateh.x][candidateh.y].altitude() <<
-        " a" << m[candidateh.x][candidateh.y].altitude() << std::endl;
-      --candidateh;
+      std::cout << "[half] c" << candidate1 <<
+        " p" << 2 * (candidate1.y - tile1.y) - m[candidate1.x][candidate1.y].altitude() <<
+        " a" << m[candidate1.x][candidate1.y].altitude() << 
+        std::endl;
+      --candidate1;
     }
 
 
-    std::cout
-      //<< "mouse " << mouse << " "
-      //<< "w " << w() << "h " << h() << " " 
-                //<< "tilef " << xf << " " << yf 
-      << " s" << screen << " "
-      << " l" << low << " "
-      << " h" << high << " "
-      << "  can" << candidate << " f" << is_full << " ";
     //    if (screen.x >= 0 && screen.x < w() && screen.y >= 0 && screen.y < h()) // safe access condition
     //      std::cout << "alt " << m[screen.x][screen.y].altitude() << " ";
-    std::cout << std::endl;
-    std::cout 
-      << "sh" << screenh << " "
-      << "lh" << lowh << " "
-      << "hh" << highh << " "
-      << "canh" << candidateh << " h" << is_half << " ";
-//    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
-//      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
-    std::cout << std::endl;
+//        std::cout << std::endl;
+//        std::cout 
+//          << "sh" << tile1 << " "
+//          << "lh" << low << " "
+//          << "hh" << high << " "
+//          << "canh" << candidate1 << " h" << is_half << " "
+//          << std::endl;
+    //    if (screenh.x >= 0 && screenh.x < w() && screenh.y >= 0 && screenh.y < h()) // safe access condition
+    //      std::cout << "alth " << m[screenh.x][screenh.y].altitude() << " ";
 
-    if (is_full && !is_half)
-      std::cout << "FULL tile" << std::endl;
-    else if (!is_full && is_half)
-      std::cout << "HALF tile" << std::endl;
-    else if (is_full && is_half)
-      std::cout << "HALF tile" << std::endl;
-    else if (!is_full && !is_half)
-      std::cout << "NO tile" << std::endl;
+    if (is_full && !is_half) {                    // FULL tile
+//      std::cout << "FULL tile" << std::endl;
+      TileCandidate = candidate0;
+    }
+    else if (!is_full && is_half) {               // HALF tile
+//      std::cout << "HALF tile" << std::endl;
+      TileCandidate = candidate1;
+    }
+    else if (is_full && is_half) {                // HALF tile
+//      std::cout << "HALF tile" << std::endl;
+      TileCandidate = candidate1;
+    }
+    else if (!is_full && !is_half) {              // HALF tile
+//      std::cout << "NO tile" << std::endl;
+    }
     else {
       // wtf
     }
+//    std::cout << "\n basetile " << TileCandidate << std::endl;
 
   }
-
 
   return TileCandidate;
 }

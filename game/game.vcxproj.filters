@@ -145,13 +145,19 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\basic_ground_tiles_64_halftile.png">
-      <Filter>Resource Files\tilesets</Filter>
-    </Image>
-  </ItemGroup>
-  <ItemGroup>
-    <Text Include="..\resources\test_map.txt">
+    <Text Include="..\resources\maps\test_map.txt">
       <Filter>Resource Files\maps</Filter>
     </Text>
+    <Text Include="..\resources\maps\test_map_t.txt">
+      <Filter>Resource Files\maps</Filter>
+    </Text>
+    <Text Include="..\resources\maps\test_map_bio.txt">
+      <Filter>Resource Files\maps</Filter>
+    </Text>
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="..\resources\tilsets\basic_ground_tiles_64_halftile.png">
+      <Filter>Resource Files\tilesets</Filter>
+    </Image>
   </ItemGroup>
 </Project>

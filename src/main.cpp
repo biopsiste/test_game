@@ -81,7 +81,7 @@ unit animation
   const unsigned char* currentKeyStates;
 
   // Level map object
-  Map map("../resources/test_map_t.txt");
+  Map map(MAP_TEST_1_PATH);
 
   // Unit variables
   Units animate("../resources/units/animate.unit.json");
@@ -162,7 +162,7 @@ unit animation
       // Get mouse position
       if (e.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
-        mouseTile = map.mouse2tile_piuficodiquellodibio(mouse_point - camera);
+        mouseTile = map.mouse2basetile(mouse_point - camera);
       }
 
       // user callback points here
@@ -182,7 +182,7 @@ unit animation
 
     //compute mouse tile and best path
     //mouse_tile = mouse2tile(mouse_point + camera);
-    mouse_tile = map.mouse2basetile(mouse_point + camera);
+//    mouse_tile = map.mouse2basetile(mouse_point + camera);
     //auto mouse_tile_high = mouse2tile_high(mouse_point + camera);
     if (mouse_tile != last_mouse_tile) {
       //cout << "mouse in tile  " << mouse_tile.x << "  " << mouse_tile.y << endl;
@@ -209,14 +209,16 @@ unit animation
     for (auto& p : bestpath) map.renderSprite(camera, p, &highlighterSprite);
 #endif
 
+#ifdef SHOW_CURSOR
+    // Render cursor
+    map.renderOnTop(mouseTile, &LowCursorSprite);
+#endif
+
 #ifdef SHOW_UNITS
     // Render unit
     moving.render(map, camera);
     animate.render(map, camera);
 #endif
-
-    // Render cursor
-    map.renderCursor(camera, mouse_point, &LowCursorSprite);
 
 #ifdef SHOW_TEXT
     // Single Line
