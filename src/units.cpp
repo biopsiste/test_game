@@ -1,4 +1,6 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
+
 #define _CRT_SECURE_NO_WARNINGS
 
 #include "jsoncons/json.hpp"
@@ -53,9 +55,9 @@ Units::Units(std::string json_path) {
   TickCounter = 0;
 }
 
-void Units::render(Map &map, const Point &cam) {
-  map.renderSprite(cam, CurrentTile, &CurrentSprite);
-}
+//void Units::render(Map &map, const Point &cam) {
+//  map.renderSprite(cam, CurrentTile, &CurrentSprite);
+//}
 
 void Units::UpdateSprite() {
   CurrentSprite = gSpriteClips[ClipsIndices[TickCounter++ % ClipsIndices.size()]];

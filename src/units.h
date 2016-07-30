@@ -1,4 +1,6 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
+
 // STL include
 #include <vector>
 
@@ -35,7 +37,7 @@ public:
   void AddTimer(Uint32 dt_ms, char type);
   void UpdateSprite();
   void UpdateTile();
-  void render(Map &map, const Point &cam);
+//  void render(Map &map, const Point &cam);
 };
 
 // Timer global callback

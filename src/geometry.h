@@ -1,3 +1,4 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
 
 //Geometry constants

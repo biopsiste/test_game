@@ -125,6 +125,7 @@
     <ClCompile Include="..\src\animation.cpp">
       <FileType>CppHeader</FileType>
     </ClCompile>
+    <ClCompile Include="..\src\utils.cpp" />
     <ClInclude Include="..\src\animation.h" />
     <ClInclude Include="..\src\battlemap.h" />
     <ClCompile Include="..\src\battlemap.cpp">
@@ -170,6 +171,7 @@
       <FileType>CppHeader</FileType>
     </ClCompile>
     <ClInclude Include="..\src\units.h" />
+    <ClInclude Include="..\src\utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\src\main.cpp" />

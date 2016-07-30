@@ -1,4 +1,6 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
+
 // MSVC Debug Helper
 #ifdef _MSC_VER
 #define CLI_PAUSE           std::cout << "\nENTER to quit..."; std::cin.get();

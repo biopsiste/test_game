@@ -1,4 +1,6 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
+
 #include <ostream>
 #include "geometry.h"
 

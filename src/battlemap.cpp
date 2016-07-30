@@ -1,4 +1,6 @@
+// Copyright 2016 Marco Di Cristina, Alessandro Fabbri
 #pragma once
+
 #include <string>
 #include <sstream>
 #include <fstream>
@@ -12,11 +14,14 @@
 #include "texture.h"
 #include "geometry.h"
 #include "battlemap.h"
+#include "utils.h"
 
 //Scene sprites
 extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
 extern LTexture gSpriteSheetTexture;
 
+
+////// CUBE methods
 Cube::Cube(int _stack_index, Point _base_coords, Point _flat_coords, Point _scr_coords, std::string entry) :
   stack_index(_stack_index), base_coords(_base_coords), flat_coords(_flat_coords), screen_coords(_scr_coords) {
   std::istringstream istr(entry);
@@ -33,6 +38,7 @@ void Cube::render(const Point& cam) {
 }
 
 
+////// CUBESTACK methods
 CubeStack::CubeStack(Point _coords, std::string stackentry) : coords(_coords) {
   std::istringstream istr(stackentry);
   std::string token;
@@ -56,6 +62,7 @@ int CubeStack::altitude() { //total altitude
 }
 
 
+/////// MAP methods
 Map::Map(std::string filename) {
   std::ifstream ifi(filename);
   std::string line, stackentry;
@@ -77,65 +84,76 @@ Map::Map(std::string filename) {
     r++;
   }
 
-  //build mouse_map
-//  for (int i = 0; i < w; i++) {
-//    for (int j = 0; j < h; j++) {
-//      auto upper_left = m[i][j].s.back().screen_coords;
-//      for (int xx = upper_left.x; xx < upper_left.x + TILE_W; ++xx) {
-//        for (int yy = upper_left.y; yy < upper_left.y + TILE_H; ++yy) {
-//          int y = int(yy - TILE_H / 2. + m[i][j].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET);
-//          double dI = (xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); if (dI > 0) dI--; auto I = lrint(dI);
-//          double dJ = -(xx - OFFSET_X) / TILE_W + (y - OFFSET_Y) / (TILE_H / 2.); auto J = lrint(dJ);
-//          if (m[i][j].s.back().flat_coords == Point{ I,J }) mouse_map[{xx, yy}] = &m[i][j].s.back();
-//          else if (yy >= upper_left.y + TILE_H - (m[i][j].s.back().altitude + 1)*TILE_GROUND_HEIGHT_OFFSET) mouse_map.erase({ xx, yy });
-//        }
-//      }
-//    }
-//  }
-  std::cout << "mouse_map size " << mouse_map.size() << std::endl;
   north = tile2screen(Point{ 0, 0 });
   south = tile2screen(Point{ this->w() - 1, this->h() - 1 });
   west = tile2screen(Point{ 0,this->h() - 1 });
   east = tile2screen(Point{ this->w() - 1 , 0 });
 }
 
-//Point Map::mouse2basetile(const Point& mouse) {
-//  if (mouse_map.count(mouse)) return mouse_map[mouse]->base_coords;
-//  return{ -999,-999 };
-//}
-
-void Map::renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
-  Point vert_offset{ 0, m[tile_index.x][tile_index.y].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET };
-  gSpriteSheetTexture.render(m[tile_index.x][tile_index.y].s.back().screen_coords - vert_offset - cam, tile);
-
-  //re-render cubes that should be in the foreground
-  for (int j = tile_index.y + 1; j < h(); ++j) {
-    if (is_in_map({ tile_index.x, j })) m[tile_index.x][j].render(cam);
-  }
-  for (int i = tile_index.x + 1; i < w(); ++i) {
-    for (int j = 0; j < h(); ++j) {
-      if (is_in_map({ i, j })) m[i][j].render(cam);
-    }
-  }
+// utilities
+inline int Map::w() { 
+  return m.size(); 
 }
 
-void Map::renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile) {
-  if (mouse_map.count(mouse + cam)) {
-    Point vert_offset{ 0, mouse_map[mouse + cam]->altitude*TILE_GROUND_HEIGHT_OFFSET };
-    gSpriteSheetTexture.render(mouse_map[mouse + cam]->screen_coords - vert_offset - cam, tile);
+inline int Map::h() { 
+  return m[0].size(); 
+}
 
-    //re-render cubes that should be in the foreground
-    Point p = mouse_map[mouse + cam]->base_coords;
-    for (int j = p.y + 1; j < h(); ++j) {
-      if (is_in_map({ p.x, j })) m[p.x][j].render(cam);
-    }
-    for (int i = p.x + 1; i < w(); ++i) {
-      for (int j = 0; j < h(); ++j) {
-        if (is_in_map({ i, j })) m[i][j].render(cam);
-      }
-    }
-  }
-  //if(mouse_map.count(mouse)) std::cout << mouse_map[mouse]->base_coords << "   " << mouse_map[mouse]->flat_coords << std::endl;
+inline bool Map::is_in_map(const Point& p) {
+  return p.x >= 0 && p.x < w() && p.y >= 0 && p.y < h();
+}
+
+inline bool Map::isSafeTile(const Point & tile) {
+  if (tile.x < w() &&     // These conditions ensure that selected tile
+    tile.y < h() &&       // is inside the upper indices bounds 
+    ((tile.x - tile.y) < w()) &&       // These conditions ensure the existence
+    ((tile.y - tile.x) < h())          // of low tile
+    )
+    return true;
+  else
+    return false;
+}
+
+
+// render
+//void Map::renderSprite(const Point& cam, const Point& tile_index, SDL_Rect * tile) {
+//  Point vert_offset{ 0, m[tile_index.x][tile_index.y].s.back().altitude*TILE_GROUND_HEIGHT_OFFSET };
+//  gSpriteSheetTexture.render(m[tile_index.x][tile_index.y].s.back().screen_coords - vert_offset - cam, tile);
+//
+//  //re-render cubes that should be in the foreground
+//  for (int j = tile_index.y + 1; j < h(); ++j) {
+//    if (is_in_map({ tile_index.x, j })) m[tile_index.x][j].render(cam);
+//  }
+//  for (int i = tile_index.x + 1; i < w(); ++i) {
+//    for (int j = 0; j < h(); ++j) {
+//      if (is_in_map({ i, j })) m[i][j].render(cam);
+//    }
+//  }
+//}
+
+//void Map::renderCursor(const Point& cam, const Point& mouse, SDL_Rect * tile) {
+//  if (mouse_map.count(mouse + cam)) {
+//    Point vert_offset{ 0, mouse_map[mouse + cam]->altitude*TILE_GROUND_HEIGHT_OFFSET };
+//    gSpriteSheetTexture.render(mouse_map[mouse + cam]->screen_coords - vert_offset - cam, tile);
+//
+//    //re-render cubes that should be in the foreground
+//    Point p = mouse_map[mouse + cam]->base_coords;
+//    for (int j = p.y + 1; j < h(); ++j) {
+//      if (is_in_map({ p.x, j })) m[p.x][j].render(cam);
+//    }
+//    for (int i = p.x + 1; i < w(); ++i) {
+//      for (int j = 0; j < h(); ++j) {
+//        if (is_in_map({ i, j })) m[i][j].render(cam);
+//      }
+//    }
+//  }
+//  //if(mouse_map.count(mouse)) std::cout << mouse_map[mouse]->base_coords << "   " << mouse_map[mouse]->flat_coords << std::endl;
+//}
+
+void Map::renderOnTop(const Point& tile, SDL_Rect * clip) {
+  if (is_in_map(tile))
+    gSpriteSheetTexture.render(m[tile.x][tile.y].s.back().screen_coords -
+      Point{ 0, m[tile.x][tile.y].s.back().altitude*int(TILE_H / 4) }, clip);
 }
 
 void Map::render(const Point& cam) {
@@ -146,6 +164,7 @@ void Map::render(const Point& cam) {
   }
 }
 
+// pathfinding
 std::vector<Point> Map::get_4neighbors(const Point& p) {
   std::vector<Point> vn;
   if (is_in_map({ p.x - 1, p.y })) vn.push_back(Point{ p.x - 1, p.y });
@@ -155,12 +174,10 @@ std::vector<Point> Map::get_4neighbors(const Point& p) {
   return vn;
 }
 
-//cost function, always 1 for now
 int Map::Astar_cost(const Point& a, const Point& b) {
   return 1;
 };
 
-//manhattan heuristic
 int Map::Astar_heuristic(const Point& a, const Point& b) {
   return abs(a.x - b.x) + abs(a.y - b.y);
 };
@@ -203,36 +220,7 @@ std::vector<Point> Map::findPath_Astar(const Point& origin, const Point& destina
   return path;
 }
 
-void Map::renderOnTop(const Point& tile, SDL_Rect * clip) {
-  if (is_in_map(tile))
-    gSpriteSheetTexture.render(m[tile.x][tile.y].s.back().screen_coords -
-      Point{ 0, m[tile.x][tile.y].s.back().altitude*int(TILE_H / 4) }, clip);
-}
-
-
-
-
-//////// ALLE
-int myrounder(const double &x) {
-  int n;
-  if (x >= 0)
-    n = int(x);
-  else
-    n = -int(-x) - 1;
-  return n;
-}
-
-bool Map::isSafeTile(const Point & tile) {
-  if (tile.x < w() &&     // These conditions ensure that selected tile
-    tile.y < h() &&       // is inside the upper indices bounds 
-    ((tile.x - tile.y) < w()) &&       // These conditions ensure the existence
-    ((tile.y - tile.x) < h())          // of low tile
-    )
-    return true;
-  else
-    return false;
-}
-
+// tile detection
 Point Map::findHighest(const Point & tile) {
   Point high(tile);
   if (tile.x >= 0 && tile.y >= 0)       // I quadrant
