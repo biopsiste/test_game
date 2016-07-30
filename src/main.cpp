@@ -81,7 +81,7 @@ unit animation
   const unsigned char* currentKeyStates;
 
   // Level map object
-  Map map(MAP_TEST_1_PATH);
+  Map map("../resources/maps/test_map.txt");
 
   // Unit variables
   Units animate("../resources/units/animate.unit.json");
