@@ -25,7 +25,7 @@ using namespace std;
 SDL_Renderer *gRenderer = NULL;
 SDL_Window *gWindow = NULL;
 // Scene sprites
-SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
+SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite, selectorSprite;
 LTexture gSpriteSheetTexture;
 // Buttons
 LButton gButtons[TOTAL_BUTTONS];
@@ -33,19 +33,19 @@ LButton gButtons[TOTAL_BUTTONS];
 int main(int argc, char* args[]) {
   //Start up SDL and create window
   if (!init()) {
-    printf("Failed to initialize!\n"); CLI_PAUSE;
+    printf("Failed to initialize!\n"); CLI_PAUSE
     exit(1);
   }
 
   //Initialize SDL_ttf 
   if (TTF_Init() == -1) {
-    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError()); CLI_PAUSE;
+    printf("SDL_ttf could not initialize! SDL_ttf Error: %s\n", TTF_GetError()); CLI_PAUSE
     exit(2);
   }
 
   // Load sprite media
   if (!loadMedia(TILESET_PATH)) {
-    printf("Failed to load media!\n"); CLI_PAUSE;
+    printf("Failed to load media!\n"); CLI_PAUSE
     exit(3);
   }
 
@@ -53,12 +53,12 @@ int main(int argc, char* args[]) {
   SDL_Color currentColor = SDL_WHITE;
   LTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
-    printf("Failed to load text media!\n"); CLI_PAUSE;
+    printf("Failed to load text media!\n"); CLI_PAUSE
     exit(4);
   }
   LMultiLineTextTexture menuTextBox;
   if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
-    printf("Failed to load text media!\n"); CLI_PAUSE;
+    printf("Failed to load text media!\n"); CLI_PAUSE
     exit(5);
   }
   std::string menuText = R"(MENU:
@@ -85,12 +85,15 @@ unit animation
 
   // Unit variables
   Units animate("../resources/units/animate.unit.json");
-  animate.AddTimer(500, TIMER_ANIMATION);
+  //animate.AddTimer(500, TIMER_ANIMATION);
   Units moving("../resources/units/moving.unit.json");
-  moving.AddTimer(250, TIMER_MOTION);
+  //moving.AddTimer(250, TIMER_MOTION);
+  animate.initStats(); moving.initStats();
+  Units* selected_unit = nullptr;
+
 
   // Multipurpose Point variables
-  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_point{}, mouseTile{};
+  Point mouse_tile{}, last_mouse_tile{ -100, -100 }, mouse_clicked_tile{ -100, -100 }, mouse_point{};
   Point camera{ 0, 0 };
   vector<Point> bestpath;
 
@@ -160,9 +163,16 @@ unit animation
       }
 
       // Get mouse position
-      if (e.type == SDL_MOUSEMOTION) {
+      if(e.type == SDL_MOUSEMOTION) {
         SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
-        mouseTile = map.mouse2basetile(mouse_point - camera);
+        map.mouse2basetile(mouse_point - camera);
+      }
+      if(e.type == SDL_MOUSEBUTTONUP) {
+        SDL_GetMouseState(&(mouse_point.x), &(mouse_point.y));
+        mouse_clicked_tile = map.mouse2basetile(mouse_point + camera);
+        selected_unit = nullptr;
+        if(animate.CurrentTile == mouse_clicked_tile) selected_unit = &animate;
+        else if(moving.CurrentTile == mouse_clicked_tile) selected_unit = &moving;
       }
 
       // user callback points here
@@ -231,6 +241,14 @@ unit animation
       menuTextBox.render(Point{ 5 * SCREEN_WIDTH / 7, 2 * SCREEN_HEIGHT / 8 });
     }
 #endif
+
+#ifdef SHOW_GUI
+		if(selected_unit) {
+			selected_unit->updateStatusBar();
+			selected_unit->gui.render();
+		}
+
+#endif // SHOW_GUI
 
     //Update screen
     SDL_RenderPresent(gRenderer);

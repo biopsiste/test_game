@@ -10,6 +10,7 @@
 // GOTYAY include
 #include "geometry.h"
 #include "battlemap.h"
+#include "gui.h"
 
 #define TIMER_ANIMATION    'a'
 #define TIMER_MOTION       'm'
@@ -28,6 +29,15 @@ public:
   char TimerType;
   SDL_TimerID UnitsTimer;
 
+  // stats
+  unsigned short max_hp, max_mp;
+
+  // stats in battle
+  unsigned short hp, mp;
+
+	// gui
+	BattleStatus gui;
+
   // Constructor
   Units() {};
   Units(const Point &p);
@@ -38,6 +48,9 @@ public:
   void UpdateSprite();
   void UpdateTile();
 //  void render(Map &map, const Point &cam);
+
+  void initStats();
+	void updateStatusBar();
 };
 
 // Timer global callback

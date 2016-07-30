@@ -3,6 +3,7 @@
 
 // MSVC Debug Helper
 #ifdef _MSC_VER
+#include <iostream>
 #define CLI_PAUSE           std::cout << "\nENTER to quit..."; std::cin.get();
 #endif
 

@@ -5,11 +5,14 @@
 
 #include "jsoncons/json.hpp"
 
+#include <string>
+
 #include "units.h"
 #include "animation.h"
 #include "defines.h"
 
 extern SDL_Rect gSpriteClips[];
+extern SDL_Window *gWindow;
 
 Units::Units(const Point &p) {
   CurrentTile = p;
@@ -24,7 +27,7 @@ Units::Units(std::string json_path) {
     junit = jsoncons::json::parse_file(json_path);
   }
   catch (std::exception &e) {
-    std::cout << "ERROR: " << e.what() << std::endl; CLI_PAUSE;
+    std::cout << "ERROR: " << e.what() << std::endl; CLI_PAUSE
     exit(21);
   }
 
@@ -92,4 +95,23 @@ Uint32 units_cb(Uint32 interval, void* param) {
   return interval;
 }
 
+void Units::initStats() {
+  max_hp = 100; max_mp = 50;
+  hp = max_hp; mp = max_mp;
+}
 
+void Units::updateStatusBar() {
+	int winH, winW; SDL_GetWindowSize(gWindow, &winW, &winH);
+	gui.hpBar_outline = { 20, winH - 100, 200, 20 };
+	gui.mpBar_outline = { 20, winH -  50, 200, 20 };
+
+	int hpsize = double(hp) / max_hp * 200. + 0.5;
+	int mpsize = double(mp) / max_mp * 200. + 0.5;
+	gui.hpBar = { 20, winH - 100, hpsize, 20 };
+	gui.mpBar = { 20, winH - 50, mpsize, 20 };
+
+	std::string hplabel = std::to_string(hp) + "/" + std::to_string(max_hp);
+	std::string mplabel = std::to_string(mp) + "/" + std::to_string(max_mp);
+	gui.hp_label.setText(hplabel);
+	gui.mp_label.setText(mplabel);
+}

@@ -19,7 +19,7 @@ struct Point {
   bool operator==(const Point& b) const;
   bool operator!=(const Point& b) const;
   Point& operator+=(const Point& b);
-  Point& Point::operator++();
+  Point& operator++();
   friend Point operator+(Point th, const Point& b);
   friend Point operator-(Point th, const Point& b);
   Point& operator-=(const Point& b);
