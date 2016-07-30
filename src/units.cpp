@@ -105,8 +105,8 @@ void Units::updateStatusBar() {
 	gui.hpBar_outline = { 20, winH - 100, 200, 20 };
 	gui.mpBar_outline = { 20, winH -  50, 200, 20 };
 
-	int hpsize = double(hp) / max_hp * 200. + 0.5;
-	int mpsize = double(mp) / max_mp * 200. + 0.5;
+	int hpsize = int(double(hp) / max_hp * 200. + 0.5);
+	int mpsize = int(double(mp) / max_mp * 200. + 0.5);
 	gui.hpBar = { 20, winH - 100, hpsize, 20 };
 	gui.mpBar = { 20, winH - 50, mpsize, 20 };
 

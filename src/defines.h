@@ -14,6 +14,7 @@
 #define SHOW_CURSOR
 //#define SHOW_UNITS
 //#define SHOW_PATH
+#define SHOW_GUI
 
 
 #define MAP_TEST_1_PATH     "../resources/maps/test_map_t.txt"
