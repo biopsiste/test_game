@@ -163,7 +163,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="..\resources\tilsets\basic_ground_tiles_64_halftile.png">
+    <Image Include="..\resources\tilesets\basic_ground_tiles_64_halftile.png">
       <Filter>Resource Files\tilesets</Filter>
     </Image>
   </ItemGroup>

@@ -85,9 +85,9 @@ unit animation
 
   // Unit variables
   Units animate("../resources/units/animate.unit.json");
-  //animate.AddTimer(500, TIMER_ANIMATION);
+  animate.AddTimer(500, TIMER_ANIMATION);
   Units moving("../resources/units/moving.unit.json");
-  //moving.AddTimer(250, TIMER_MOTION);
+  moving.AddTimer(250, TIMER_MOTION);
   animate.initStats(); moving.initStats();
   Units* selected_unit = nullptr;
 
