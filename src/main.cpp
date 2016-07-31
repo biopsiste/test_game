@@ -26,7 +26,7 @@ SDL_Renderer *gRenderer = NULL;
 SDL_Window *gWindow = NULL;
 // Scene sprites
 SDL_Rect gSpriteClips[TILESET_TILES], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite, selectorSprite;
-LTexture gSpriteSheetTexture;
+PTexture gSpriteSheetTexture;
 // Buttons
 LButton gButtons[TOTAL_BUTTONS];
 
@@ -51,12 +51,12 @@ int main(int argc, char* args[]) {
 
   // Load text media  
   SDL_Color currentColor = SDL_WHITE;
-  LTextTexture label;
+  PTextTexture label;
   if (!label.loadFormat(TTF_PATH_LAZY, 25)) {
     printf("Failed to load text media!\n"); CLI_PAUSE
     exit(4);
   }
-  LMultiLineTextTexture menuTextBox;
+  PMultiLineTextTexture menuTextBox;
   if (!menuTextBox.loadFormat(TTF_PATH_LAZY, 20)) {
     printf("Failed to load text media!\n"); CLI_PAUSE
     exit(5);

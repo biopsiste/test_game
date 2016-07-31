@@ -5,7 +5,7 @@
 #include "buttons.h"
 
 extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
-extern LTexture gSpriteSheetTexture;
+extern PTexture gSpriteSheetTexture;
 
 LButton::LButton() { 
   mPosition.x = 0; 

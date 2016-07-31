@@ -7,7 +7,7 @@
 
 extern SDL_Renderer *gRenderer;
 
-bool LTextTexture::loadFormat(std::string ttf_path, int _size) {
+bool PTextTexture::loadFormat(std::string ttf_path, int _size) {
   // Open the font .ttf file
   size = _size;
   font = TTF_OpenFont(ttf_path.c_str(), size);
@@ -18,12 +18,12 @@ bool LTextTexture::loadFormat(std::string ttf_path, int _size) {
   return true;
 }
 
-void LTextTexture::setFormat(TTF_Font * _font, int _size){
+void PTextTexture::setFormat(TTF_Font * _font, int _size){
   font = _font;
   size = _size;
 }
 
-bool LTextTexture::setText(std::string Text, SDL_Color textColor /*= textWhite*/) {
+bool PTextTexture::setText(std::string Text, SDL_Color textColor /*= textWhite*/) {
   //Get rid of preexisting texture 
   free();
 
@@ -51,7 +51,7 @@ bool LTextTexture::setText(std::string Text, SDL_Color textColor /*= textWhite*/
 }
 
 
-bool LMultiLineTextTexture::loadFormat(std::string ttf_path, int _size) {
+bool PMultiLineTextTexture::loadFormat(std::string ttf_path, int _size) {
   // Open the font .ttf file
   size = _size;
   font = TTF_OpenFont(ttf_path.c_str(), size);
@@ -62,7 +62,7 @@ bool LMultiLineTextTexture::loadFormat(std::string ttf_path, int _size) {
   return true;
 }
 
-void LMultiLineTextTexture::setText(std::string _text, SDL_Color color /* = textWhite */){
+void PMultiLineTextTexture::setText(std::string _text, SDL_Color color /* = textWhite */){
   text = _text;
   std::istringstream s(text);
   std::string line;
@@ -76,7 +76,7 @@ void LMultiLineTextTexture::setText(std::string _text, SDL_Color color /* = text
   }
 };
 
-void LMultiLineTextTexture::render(Point p) {
+void PMultiLineTextTexture::render(Point p) {
   auto pivot = p;
   for (size_t i = 0; i < linesTexture.size(); i++) {
     if ( i != 0 ) pivot += Point{ 0, linesTexture[i].mHeight + LINE_SPACING_PX };

@@ -18,7 +18,7 @@
 
 //Scene sprites
 extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
-extern LTexture gSpriteSheetTexture;
+extern PTexture gSpriteSheetTexture;
 
 
 ////// CUBE methods

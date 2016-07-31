@@ -7,7 +7,7 @@
 
 struct BattleStatus {
 	SDL_Rect hpBar_outline, mpBar_outline, hpBar, mpBar;
-	LTextTexture hp_label, mp_label;
+	PTextTexture hp_label, mp_label;
 
 	BattleStatus();
 

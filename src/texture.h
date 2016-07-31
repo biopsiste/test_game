@@ -38,7 +38,7 @@
 
 
 ////// Texture wrapper class
-class LTexture {
+class PTexture {
 public:
   //The actual hardware texture
   SDL_Texture* mTexture;
@@ -49,9 +49,9 @@ public:
   int mHeight;
 
   //Initializes variables
-  LTexture();
+  PTexture();
   //Deallocates memory
-  ~LTexture();
+  ~PTexture();
 
   // Loads image at specified path
   bool loadFromFile(std::string path);

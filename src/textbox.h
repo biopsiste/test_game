@@ -19,7 +19,7 @@
 #define DEFAULT_TEXT_COLOR SDL_WHITE
 
 // Single line TTF text texture
-class LTextTexture : public LTexture {
+class PTextTexture : public PTexture {
 public:
 
   TTF_Font *font;
@@ -33,14 +33,14 @@ public:
 };
 
 //////// Multiline TTF TextBox Texture
-class LMultiLineTextTexture {
+class PMultiLineTextTexture {
 public:
   Point p;
   TTF_Font *font;
   int size;
   std::string text;
   std::vector<std::string> lines;
-  std::vector<LTextTexture> linesTexture;
+  std::vector<PTextTexture> linesTexture;
 
   // Load format from file
   bool loadFormat(std::string ttf_path, int _size);

@@ -7,21 +7,21 @@
 extern SDL_Renderer *gRenderer;
 extern SDL_Window *gWindow;
 extern SDL_Rect gSpriteClips[], cursorSprite, highlighterSprite, HighCursorSprite, LowCursorSprite;
-extern LTexture gSpriteSheetTexture;
+extern PTexture gSpriteSheetTexture;
 
-LTexture::LTexture(){
+PTexture::PTexture(){
   //Initialize
   mTexture = NULL;
   mWidth = 0;
   mHeight = 0;
 }
 
-LTexture::~LTexture() {
+PTexture::~PTexture() {
   //Deallocate
   free();
 }
 
-bool LTexture::loadFromFile(std::string path) {
+bool PTexture::loadFromFile(std::string path) {
   //Get rid of preexisting texture
   free();
 
@@ -57,7 +57,7 @@ bool LTexture::loadFromFile(std::string path) {
   return mTexture != NULL;
 }
 
-void LTexture::free() {
+void PTexture::free() {
   //Free texture if it exists
   if (mTexture != NULL) {
     SDL_DestroyTexture(mTexture);
@@ -67,7 +67,7 @@ void LTexture::free() {
   }
 }
 
-void LTexture::render(const Point &p, SDL_Rect* clip /* = NULL */ ) {
+void PTexture::render(const Point &p, SDL_Rect* clip /* = NULL */ ) {
   //Set rendering space and render to screen
   SDL_Rect renderQuad = { p.x, p.y, mWidth, mHeight };
 
